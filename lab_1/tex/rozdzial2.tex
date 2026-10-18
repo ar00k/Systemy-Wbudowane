@@ -1,0 +1,7 @@
+\section{Krótko o sterowniku i języku drabinkowym}
+
+LOGO! jest małym sterownikiem przemysłowym Siemensa. W ćwiczeniu traktowaliśmy go jak typowy PLC: czyta wejścia, wykonuje program i wystawia wyjścia, a potem powtarza ten obieg. W Soft Comfort ten sam program można oglądać jako bloki funkcyjne albo jako drabinkę. My zostaliśmy przy drabince, bo na niej widać styki, cewki i szeregowe warunki w jednej linii.
+
+Cewka wyjściowa (Q) steruje fizycznym napędem. Marker (M) zachowuje się podobnie, ale nie jest wyprowadzony na zacisk --- to komórka pamięci, z której można zrobić podtrzymanie. Timer odmierzający czas po pojawieniu się sygnału opóźnia przejście do następnego napędu. Styk normalnie otwarty przewodzi, gdy sygnał jest jedynką. Styk zanegowany przewodzi, gdy sygnału nie ma, i właśnie tak wstawiliśmy STOP oraz tory awarii: dopóki awaria nie wystąpi, warunek jest spełniony i napęd może pracować.
+
+Obiekt, który sterowaliśmy, to trzy silniki taśmociągów ustawionych jeden za drugim. Materiał idzie przez kolejne odcinki, więc chwila włączenia każdego napędu i to, czy poprzedni (albo następny) odcinek w ogóle pracuje, ma znaczenie dla całej linii.

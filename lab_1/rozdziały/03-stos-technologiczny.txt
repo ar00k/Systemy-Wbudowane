@@ -1,0 +1,50 @@
+ROZDZIAŁ 3: STOS TECHNOLOGICZNY
+
+Stos technologiczny projektu został dobrany z myślą o spójności języka TypeScript, wydajnej komunikacji czasu rzeczywistego oraz możliwości wdrożenia mechanizmów bezpieczeństwa (TLS, JWT, kontrola sesji).
+
+1. Backend
+
+Środowisko uruchomieniowe:
+- Bun / Node.js: środowisko uruchomieniowe TypeScript, umożliwiające szybkie uruchamianie serwera API oraz skryptów pomocniczych.
+- TypeScript: typowany nadzbiór JavaScript, poprawiający czytelność kontraktów API oraz odporność kodu na błędy.
+
+Framework API:
+- Hono: lekki framework HTTP do budowy endpointów REST oraz integracji z middleware (autoryzacja, logowanie żądań, walidacja).
+
+Komunikacja realtime:
+- Socket.IO: warstwa zdarzeń używana m.in. do akceptacji połączenia, sygnalizacji WebRTC oraz zamykania sesji.
+
+Magazyn stanu sesji:
+- Redis / Valkey: przechowywanie stanu sesji i danych tymczasowych z kontrolą czasu życia (TTL).
+
+Baza danych:
+- PostgreSQL: trwałe dane użytkowników i metadane systemu, zgodne z wymaganiami spójności (ACID).
+
+Dodatki natywne Node.js (N-API):
+- @maciejwojs/screen-capture: natywny addon C++20 + wrapper TypeScript do przechwytywania obrazu ekranu. API obejmuje m.in. start/stop, onFrame, getPixelData, getSharedHandle oraz przełączanie monitorów.
+- @maciejwojs/input-bridge: natywny addon C++20 + wrapper TypeScript do emulacji wejścia (mysz/klawiatura) i obsługi schowka. API obejmuje kolejkowanie zdarzeń, flush oraz callbacki schowka.
+- Wspólny model build obejmuje node-gyp, node-gyp-build i kompilację warstwy TypeScript (lib -> dist).
+
+Backendy platformowe dodatków:
+- screen-capture (Windows): backendy winrt, dxgi, gdi z auto-selekcją (WinRT -> DXGI -> GDI) lub wymuszeniem przez flagę force_api.
+- screen-capture (Linux): wybór backendu Wayland/X11 na podstawie WAYLAND_DISPLAY i XDG_SESSION_TYPE; fallback stub na nieobsługiwanych platformach.
+- input-bridge (Windows): natywne zdarzenia wejścia przez WinAPI (SendInput) i nasłuch schowka.
+- input-bridge (Linux): backend portalowy (RemoteDesktop/Clipboard) lub X11 (zależnie od flagi use_x11_backend); fallback stub.
+
+2. Warstwa kliencka (desktop)
+
+- Electron: aplikacja wieloplatformowa łącząca Chromium z Node.js, umożliwiająca dostęp do zasobów systemowych przy kontrolowanym modelu IPC.
+- Vue 3: budowa interfejsu użytkownika w warstwie renderer.
+- Pinia: zarządzanie stanem aplikacji po stronie UI.
+- Vue Router: nawigacja pomiędzy widokami.
+- i18n: obsługa wielu języków interfejsu (jeśli włączono w projekcie).
+
+3. Infrastruktura i bezpieczeństwo sieciowe
+
+- Nginx: reverse proxy oraz terminacja TLS dla ruchu HTTP/S w kierunku backendu.
+- STUN/TURN (coturn): wsparcie negocjacji połączeń WebRTC w środowiskach z NAT oraz niestabilnymi łączami.
+- Metryki Prometheus oraz integracje z Grafana/Loki: monitorowanie obciążenia i diagnostyka incydentów.
+
+4. Podsumowanie
+
+Przyjęty stos technologiczny realizuje podział odpowiedzialności: operacje kontrolne i spójność danych po stronie REST, a zdarzenia wrażliwe czasowo po stronie Socket.IO oraz WebRTC.

@@ -1,0 +1,40 @@
+ROZDZIAŁ 6: WNIOSKI
+
+1. Ocena realizacji celów projektu
+
+Przeprowadzone prace projektowe i implementacyjne potwierdziły możliwość zbudowania systemu zdalnego wsparcia, który łączy wymagania funkcjonalne z istotnymi wymaganiami niefunkcjonalnymi.
+Opracowane rozwiązanie umożliwia tworzenie i obsługę sesji host--guest, realizuje kontrolowany proces akceptacji połączenia oraz wykorzystuje sygnalizację realtime do zestawienia kanału WebRTC.
+
+2. Najważniejsze efekty techniczne
+
+W toku realizacji projektu uzyskano następujące efekty:
+- wdrożenie architektury warstwowej z wyraźnym podziałem odpowiedzialności pomiędzy frontend i backend,
+- implementację mechanizmów uwierzytelniania i autoryzacji opartych na tokenach JWT,
+- implementację procesu zestawiania sesji opartego na kodzie i haśle z kontrolą czasu życia danych,
+- realizację warstwy realtime z użyciem Socket.IO,
+- zastosowanie mechanizmów ochrony danych i komunikacji, obejmujących m.in. TLS oraz elementy kryptograficzne,
+- przygotowanie podstaw monitoringu i diagnostyki systemu.
+
+3. Ograniczenia i ryzyka
+
+Pomimo osiągnięcia zakładanych celów, rozwiązanie posiada naturalne ograniczenia charakterystyczne dla systemów realtime oraz aplikacji hybrydowych:
+- zależność jakości połączenia od warunków sieciowych użytkowników,
+- konieczność utrzymywania spójności konfiguracji pomiędzy wieloma komponentami środowiska uruchomieniowego,
+- złożoność diagnostyki problemów występujących jednocześnie w warstwie UI, IPC, API i Socket.IO,
+- potrzeba ciągłej walidacji kontraktów komunikacyjnych w miarę rozwoju systemu.
+
+4. Kierunki dalszego rozwoju
+
+W kolejnych etapach rekomenduje się:
+1) rozbudowę scenariuszy testów automatycznych (integracyjnych i end-to-end) dla krytycznych przepływów sesji,
+2) dalsze uszczelnienie polityk bezpieczeństwa i audyt konfiguracji środowiskowych,
+3) dopracowanie mechanizmów odporności na zakłócenia sieciowe, w szczególności dla reconnect i recovery sesji,
+4) rozszerzenie metryk i dashboardów operacyjnych dla warstwy realtime,
+5) ewentualne rozszerzenie funkcjonalności użytkowych zależnie od priorytetów zespołu.
+
+5. Podsumowanie końcowe
+
+Przeprowadzony projekt potwierdził, że możliwe jest zbudowanie skalowalnego i bezpiecznego systemu zdalnej pomocy z wykorzystaniem nowoczesnego stosu TypeScript, przy zachowaniu czytelnego podziału odpowiedzialności pomiędzy komponentami.
+Opracowana dokumentacja obejmuje pełny cykl wytwórczy: od opisu systemu i wymagań, przez poradnik uruchomieniowy i stos technologiczny, po implementację, diagramy oraz ocenę rezultatów.
+
+Uzyskane wyniki stanowią solidną podstawę do dalszego rozwoju rozwiązania oraz jego ewolucji w kierunku produkcyjnego narzędzia wspierającego zdalną współpracę i pomoc techniczną.

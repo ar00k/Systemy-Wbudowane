@@ -1,0 +1,99 @@
+ROZDZIAŁ 4: IMPLEMENTACJA
+
+1. Architektura systemu
+
+System został zrealizowany jako rozwiązanie hybrydowe: aplikacja desktopowa (Electron + TypeScript) oraz backend usługowy (REST + Socket.IO) z komponentami infrastrukturalnymi (m.in. reverse proxy, cache sesji, baza danych, opcjonalnie STUN/TURN).
+Warstwa HTTP realizuje operacje kontrolne (tworzenie i walidacja sesji, autoryzacja), natomiast warstwa realtime obsługuje akceptację połączenia i sygnalizację WebRTC.
+
+2. Założenia implementacyjne
+
+Celem etapu implementacji było praktyczne odwzorowanie założeń projektowych:
+- rozdzielenie odpowiedzialności pomiędzy warstwę kliencką i serwerową,
+- obsługa komunikacji realtime,
+- zachowanie wysokiego poziomu bezpieczeństwa danych sesyjnych.
+
+Implementację zrealizowano z wykorzystaniem wspólnego stosu TypeScript, co uprościło utrzymanie spójnych kontraktów danych pomiędzy komponentami.
+
+3. Implementacja warstwy backendowej
+
+Warstwa backendowa została przygotowana w środowisku Bun, z użyciem frameworka Hono i języka TypeScript.
+Wyróżnione grupy funkcjonalne API:
+- auth: rejestracja, logowanie, odświeżanie sesji, wylogowanie i pobranie informacji o użytkowniku,
+- users: operacje na profilu użytkownika oraz obsługa uploadu avatara z walidacją,
+- connections: tworzenie i dołączanie do sesji po kodzie oraz wydawanie tokenów połączeniowych dla ról host/guest,
+- crypto: uzgadnianie kluczy z użyciem handshake ECDH i utrzymywanie sesji szyfrowania,
+- core: dane wspólne dla klienta (m.in. wersje wspierane i ustawienia językowe),
+- system: endpointy diagnostyczne i metryki,
+- administration: operacje administracyjne kontrolowane mechanizmem uprawnień.
+
+4. Implementacja aplikacji desktopowej
+
+Część kliencka została zaimplementowana jako aplikacja Electron z warstwami main, preload i renderer.
+Warstwa renderer odpowiada za interfejs użytkownika (Vue 3, Pinia, Router, i18n), a komunikacja z backendem i operacje systemowe zostały skoncentrowane w procesie main.
+
+W implementacji persistence zastosowano rozdzielenie danych:
+- dane wrażliwe (m.in. identyfikator sesji, klucze i tokeny) są przechowywane w secure store,
+- dane lokalne i konfiguracyjne (np. ustawienia aplikacji, cache tłumaczeń) utrzymywane są w magazynie lokalnym.
+
+5. Implementacja dodatków natywnych
+
+Na potrzeby aplikacji zaimplementowano dwa dodatki natywne N-API:
+- screen-capture: przechwytywanie klatek ekranu, metadanych obrazu oraz opcjonalnie danych pikseli,
+- input-bridge: emulacja zdarzeń myszy/klawiatury oraz obsługa synchronizacji schowka.
+
+Oba dodatki wykorzystują architekturę TypeScript wrapper + C++20 backend platformowy.
+
+5.1 screen-capture
+- API obejmuje m.in. start, stop, onFrame/offFrame, getPixelData, getSharedHandle, getSharedTextureInfo oraz metody przełączania monitora.
+- Wrapper oczekuje na gotowość strumienia klatek przez polling wymiarów co 30 ms i timeout 5000 ms.
+- Na Windows dostępne są backendy winrt, dxgi, gdi; na Linux wybierany jest backend Wayland lub X11 zależnie od środowiska sesji.
+
+5.2 input-bridge
+- API obejmuje m.in. ruchy myszy (relatywne i absolutne), kliknięcia, scroll, zdarzenia klawiaturowe, typeString, kolejkę zdarzeń z flush oraz operacje schowka (tekst i pliki).
+- Dla Linux backend portalowy realizuje sekwencję autoryzacji RemoteDesktop/Clipboard, z limitem oczekiwania 45 s.
+- W trybie X11 dostępna jest implementacja oparta o XTest i narzędzia schowka systemowego; dla nieobsługiwanych platform stosowany jest backend stub.
+
+Włączenie dodatków natywnych pozwoliło zachować wysoką jakość obrazu i responsywność sterowania w sesji zdalnej.
+
+6. Implementacja procesu zestawiania sesji
+
+Proces zestawiania połączenia host--guest przebiega następująco:
+1) Host tworzy sesję przez endpoint /connections; dane sesji są zapisywane w cache z ograniczonym czasem życia.
+2) Guest wysyła żądanie dołączenia przez /connections/join z kodem i hasłem sesji.
+3) Po stronie Socket.IO guest emituje zdarzenie connection:request-access, które serwer przekazuje do hosta.
+4) Host podejmuje decyzję connection:accept lub connection:reject.
+5) Po akceptacji uruchamiana jest wymiana sygnalizacji WebRTC (webrtc:offer, webrtc:answer, webrtc:ice-candidate).
+6) Zakończenie sesji następuje przez zdarzenie connection:disconnect.
+
+7. Implementacja mechanizmów bezpieczeństwa
+
+Wdrożone mechanizmy bezpieczeństwa obejmują:
+- uwierzytelnianie i autoryzację z użyciem tokenów JWT,
+- separację tokenu dostępowego i odświeżającego,
+- przechowywanie tokenu odświeżającego w ciasteczku httpOnly,
+- walidację danych wejściowych (schematy Zod),
+- handshake kryptograficzny ECDH i obsługę klucza sesyjnego,
+- szyfrowanie payloadów komunikacji (konfigurowalne),
+- ochronę sieciową przez TLS oraz warstwę WAF.
+
+8. Obsługa błędów i odporność rozwiązania
+
+Implementacja uwzględnia scenariusze błędne na poziomie HTTP, Socket.IO oraz stanu sesji.
+Zastosowano m.in. walidację tokenów połączeniowych, kontrolę liczby prób i automatyczne wygaszanie wpisów sesyjnych.
+
+9. Monitoring, diagnostyka i utrzymanie
+
+Wdrożono mechanizmy monitoringu i diagnostyki obejmujące endpointy health/deep health oraz metryki Prometheus.
+Środowisko kontenerowe przewiduje integrację z narzędziami obserwowalności (m.in. Grafana i Loki).
+
+10. Status potwierdzenia implementacji
+
+Potwierdzono główne założenia architektoniczne i implementacyjne backendu oraz aplikacji desktopowej.
+Wskazane elementy do dodatkowej weryfikacji:
+- pełna zgodność kanałów IPC zadeklarowanych w preload z handlerami procesu main,
+- finalna obsługa scenariuszy granicznych,
+- zgodność wartości konfiguracyjnych pomiędzy dokumentacją i wdrożeniem.
+
+11. Podsumowanie rozdziału
+
+Przedstawiona implementacja potwierdza możliwość realizacji wymagań funkcjonalnych i niefunkcjonalnych zdefiniowanych w poprzednich rozdziałach.

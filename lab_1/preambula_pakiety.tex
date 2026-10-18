@@ -1,0 +1,375 @@
+% ------------------------------------------------------------------------
+% PAKIETY
+% ------------------------------------------------------------------------
+
+%różne pakiety matematyczne, warto przejrzeć dokumentację, muszą być powyżej ustawień językowych.
+\usepackage{mathrsfs}   %Różne symbole matematyczne opisane w katalogu ~\doc\latex\comprehensive. Zamienia \mathcal{L} ze zwykłego L na L-transformatę.
+\usepackage{eucal}      %Różne symbole matematyczne.
+\usepackage{amssymb}    %Różne symbole matematyczne.
+\usepackage{amsmath}    %Dodatkowe funkcje matematyczne, np. polecenie \dfac{}{} skladajace ulamek w trybie wystawionym (porównaj $\dfrac{1}{2}$, a $\frac{1}{2}$).
+
+%język polski i klawiatura
+\usepackage[polish]{babel}
+\usepackage{csquotes}
+%\usepackage{qtimes} % czcionka Times new Roman
+\usepackage{polski}
+
+\usepackage{ifluatex}
+
+\ifluatex
+  %czcionka
+  \usepackage{fontspec} % pozwalający na użycie czcionek systemowych
+  \setmainfont{lato} % czcionka Calibri (problem na Linuxie)
+
+  %obsługa pdf'a
+  \usepackage[luatex,usenames,dvipsnames]{color}      %Obsługa kolorów. Opcje usenames i dvipsnames wprowadzają dodatkowe nazwy kolorow.
+	\usepackage[luatex,pagebackref=false,draft=false,pdfpagelabels=false,colorlinks=true,urlcolor=black,linkcolor=black,filecolor=black,citecolor=black,pdfstartview=FitH,pdfstartpage=1,pdfpagemode=UseOutlines,bookmarks=true,bookmarksopen=true,bookmarksopenlevel=2,bookmarksnumbered=true,pdfauthor={imie nazwisko},pdftitle={Dokumentacja Projektowa},pdfsubject={},pdfkeywords={transient recovery voltage trv},unicode=true]{hyperref}   %Opcja pagebackref=true dotyczy bibliografii: pokazuje w spisie literatury numery stron, na których odwołano się do danej pozycji.
+\else
+  \usepackage[pdftex,usenames,dvipsnames]{color}      %Obsługa kolorów. Opcje usenames i dvipsnames wprowadzają dodatkowe nazwy kolorow.
+\usepackage[pdftex,pagebackref=false,draft=false,pdfpagelabels=false,colorlinks=true,urlcolor=black,linkcolor=black,filecolor=black,citecolor=black,pdfstartview=FitH,pdfstartpage=1,pdfpagemode=UseOutlines,bookmarks=true,bookmarksopen=true,bookmarksopenlevel=2,bookmarksnumbered=true,pdfauthor={imie nazwisko},pdftitle={Dokumentacja Projektowa},pdfsubject={},pdfkeywords={transient recovery voltage trv},unicode=true]{hyperref}  %Opcja pagebackref=true dotyczy bibliografii: pokazuje w spisie literatury numery stron, na których odwołano się do danej pozycji.
+\fi
+
+\usepackage{lastpage} %! do numerowania stron w formacie (x z y) Alternatywnie można użyć \label{LastPage} na ostatniej stronie w dokumrnt.tex 
+
+%bibliografia
+%\usepackage[numbers,sort&compress]{natbib}  %Porządkuje zawartość odnośników do literatury, np. [2-4,6]. Musi być pod pdf'em, a styl bibliogfafii musi mieć nazwę z dodatkiem 'nat', np. \bibliographystyle{unsrtnat} (w kolejności cytowania).
+\usepackage[
+backend=biber,
+style=numeric,
+sorting=none
+]{biblatex}
+\addbibresource{bibliografia.bib}
+\usepackage{hypernat}                       %Potrzebna pakietowi natbib do wspolpracy z pakietem hyperref (wazna kolejnosc: 1. hyperref, 2. natbib, 3. hypernat).
+
+%grafika i geometria strony
+\usepackage{extsizes}           %Dostepne inne rozmiary czcionek, np. 14 w poleceniu: \documentclass[14pt]{article}.
+\usepackage[final]{graphicx}
+\usepackage[a4paper,left=2cm,right=2cm,top=2cm,bottom=2cm,headheight=24pt]{geometry}
+
+%strona tytułowa
+\usepackage{strona_tytulowa}
+
+%inne
+\usepackage[hide]{todo}                     %Wprowadza polecenie \todo{treść}. Opcje pakietu: hide/show. Polecenie \todos ma byc na koncu dokumentu, wszystkie \todo{} po \todos sa ignorowane.
+\usepackage[basic,physics]{circ}            %Wprowadza środowisko circuit do rysowania obwodów elektrycznych. Musi byc poniżej pakietow językowych.
+\usepackage[sf,bf,outermarks]{titlesec}     %Troszczy się o wygląd tytułów rozdziałów (section, subsection, ...). sf oznacza czcionkę sans serif (typu arial), bf -- bold. U mnie: oddzielna linia dla naglowku paragraph. Patrz tez: tocloft -- lepiej robi format spisu tresci.
+\usepackage{tocloft}                        %Troszczy się o format spisu trsci.
+\usepackage{expdlist}    %Zmienia definicję środowiska description, daje większe możliwości wpływu na wygląd listy.
+\usepackage{flafter}     %Wprowadza parametr [tb] do polecenia \suppressfloats[t] (polecenie to powoduje nie umieszczanie rysunkow, tabel itp. na stronach, na ktorych jest to polecenie (np. moze byc to stroma z tytulem rozdzialu, ktory chcemy zeby byl u samej gory, a nie np. pod rysunkiem)).
+\usepackage{array}       %Ładniej drukuje tabelki (np. daje wiecej miejsca w komorkach -- nie są tak ścieśnione, jak bez tego pakietu).
+\usepackage{listings}    %Listingi programow.
+\usepackage[format=hang,labelsep=period,labelfont={bf,small},textfont=small]{caption}   %Formatuje podpisy pod rysunkami i tabelami. Parametr 'hang' powoduje wcięcie kolejnych linii podpisu na szerokosc nazwy podpisu, np. 'Rysunek 1.'.
+\usepackage{appendix}    %Troszczy się o załączniki.
+\usepackage{floatflt}    %Troszczy się o oblewanie rysunkow tekstem.
+\usepackage{here}        %Wprowadza dodtkowy parametr umiejscowienia rysunków, tabel, itp.: H (duże). Umiejscawia obiekty ruchome dokladnie tam gdzie są w kodzie źródłowym dokumentu.
+\usepackage{makeidx}     %Troszczy się o indeks (skorowidz).
+
+%nieużywane, ale potencjalnie przydatne
+\usepackage{sectsty}           %Formatuje nagłówki, np. żeby były kolorowe -- polecenie: \allsectionsfont{\color{Blue}}.
+%\usepackage{version}           %Wersje dokumentu.
+
+%============
+\usepackage{longtable}			%tabelka
+\usepackage{tabularx}
+%============
+
+%============
+% Ustawienia listingów do kodu
+%============
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+% Definicja stylu "mystyle"
+\lstdefinestyle{mystyle}{
+	backgroundcolor=\color{backcolour},   
+	commentstyle=\color{codegreen},
+	keywordstyle=\color{blue},	%magenta
+	numberstyle=\tiny\color{codegray},
+	stringstyle=\color{codepurple},
+	basicstyle=\ttfamily\footnotesize,
+	breakatwhitespace=false,         
+	breaklines=true,                 
+	captionpos=b,                    
+	keepspaces=true,                 
+	numbers=left,                    
+	numbersep=5pt,                  
+	showspaces=false,                
+	showstringspaces=false,
+	showtabs=false,                  
+	tabsize=2,
+	literate=
+	  {á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+	{Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
+	{à}{{\`a}}1 {è}{{\`e}}1 {ì}{{\`i}}1 {ò}{{\`o}}1 {ù}{{\`u}}1
+	{À}{{\`A}}1 {È}{{\`E}}1 {Ì}{{\`I}}1 {Ò}{{\`O}}1 {Ù}{{\`U}}1
+	{ä}{{\"a}}1 {ë}{{\"e}}1 {ï}{{\"i}}1 {ö}{{\"o}}1 {ü}{{\"u}}1
+	{Ä}{{\"A}}1 {Ë}{{\"E}}1 {Ï}{{\"I}}1 {Ö}{{\"O}}1 {Ü}{{\"U}}1
+	{â}{{\^a}}1 {ê}{{\^e}}1 {î}{{\^i}}1 {ô}{{\^o}}1 {û}{{\^u}}1
+	{Â}{{\^A}}1 {Ê}{{\^E}}1 {Î}{{\^I}}1 {Ô}{{\^O}}1 {Û}{{\^U}}1
+	{ã}{{\~a}}1 {ẽ}{{\~e}}1 {ĩ}{{\~i}}1 {õ}{{\~o}}1 {ũ}{{\~u}}1
+	{Ã}{{\~A}}1 {Ẽ}{{\~E}}1 {Ĩ}{{\~I}}1 {Õ}{{\~O}}1 {Ũ}{{\~U}}1
+	{œ}{{\oe}}1 {Œ}{{\OE}}1 {æ}{{\ae}}1 {Æ}{{\AE}}1 {ß}{{\ss}}1
+	{ű}{{\H{u}}}1 {Ű}{{\H{U}}}1 {ő}{{\H{o}}}1 {Ő}{{\H{O}}}1
+	{ç}{{\c c}}1 {Ç}{{\c C}}1 {ø}{{\o}}1 {Ø}{{\O}}1 {å}{{\r a}}1 {Å}{{\r A}}1
+	{€}{{\euro}}1 {£}{{\pounds}}1 {«}{{\guillemotleft}}1
+	{»}{{\guillemotright}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1 {¿}{{?`}}1 {¡}{{!`}}1
+	{ą}{{\k{a}}}1 {ć}{{\'{c}}}1 {ę}{{\k{e}}}1 {ł}{{\l}}1 {ń}{{\'n}}1
+	{ó}{{\'o}}1 {ś}{{\'s}}1 {ź}{{\'z}}1 {ż}{{\.{z}}}1
+	{Ą}{{\k{A}}}1 {Ć}{{\'{C}}}1 {Ę}{{\k{E}}}1 {Ł}{{\L}}1 {Ń}{{\'N}}1
+	{Ó}{{\'O}}1 {Ś}{{\'S}}1 {Ź}{{\'Z}}1 {Ż}{{\.{Z}}}1
+	}
+
+	% Styl dla Electron + Vue + TypeScript (frontend)
+\lstdefinestyle{frontend}{
+    basicstyle=\ttfamily\footnotesize,
+    keywordstyle=\color{teal!70!black}\bfseries,
+    commentstyle=\color{gray!60}\itshape,
+    stringstyle=\color{green!60!black},
+    numbers=left,
+    numberstyle=\ttfamily\tiny\color{gray}\raisebox{0.5ex},
+    stepnumber=1,
+    numbersep=5pt,
+    breaklines=true,
+    frame=single,
+    backgroundcolor=\color{teal!5},
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2,
+    captionpos=b,
+    linewidth=\linewidth,
+    xleftmargin=20pt,
+    xrightmargin=5pt,
+    framexleftmargin=15pt,
+    framexrightmargin=5pt,
+    rulecolor=\color{teal!30},
+    literate={ą}{{\k{a}}}1
+             {ć}{{\'c}}1
+             {ę}{{\k{e}}}1
+             {ł}{{\l{}}}1
+             {ń}{{\'n}}1
+             {ó}{{\'o}}1
+             {ś}{{\'s}}1
+             {ź}{{\'z}}1
+             {ż}{{\.z}}1
+             {Ą}{{\k{A}}}1
+             {Ć}{{\'C}}1
+             {Ę}{{\k{E}}}1
+             {Ł}{{\L{}}}1
+             {Ń}{{\'N}}1
+             {Ó}{{\'O}}1
+             {Ś}{{\'S}}1
+             {Ź}{{\'Z}}1
+             {Ż}{{\.Z}}1
+             {{<}}{{$<$}}1
+             {{>}}{{$>$}}1
+             {{~}}{{${\sim}$}}1
+             {{_}}{{\_}}1
+             {{^}}{{${\hat}$}}1
+             {{°}}{{$^{\circ}$}}1,
+    keywords={abstract, as, async, await, boolean, break, case, catch, class, 
+      const, continue, declare, default, delete, do, else, enum, export, 
+      extends, false, finally, for, from, function, get, if, implements, import, in, 
+      instanceof, interface, keyof, let, module, namespace, never, new, null, 
+      number, object, private, protected, public, readonly, require, return, 
+      set, static, string, super, switch, symbol, this, throw, true, try, type, typeof, 
+      undefined, unknown, var, void, while, with, yield,
+      // Electron specific
+      app, BrowserWindow, ipcMain, ipcRenderer, dialog, Menu, Tray, 
+      shell, clipboard, nativeImage, screen, globalShortcut, powerMonitor,
+      // Vue specific
+      ref, reactive, computed, watch, onMounted, onUnmounted, onBeforeMount,
+      defineComponent, nextTick, provide, inject, readonly, shallowRef, toRefs,
+      // TypeScript specific
+      type, interface, enum, namespace, module, declare, implements},
+    emph={app, BrowserWindow, ipcMain, ref, reactive, computed, onMounted, defineComponent},
+    emphstyle=\color{teal!80!black},
+    lineskip=2pt,
+    aboveskip=10pt,
+    belowskip=10pt,
+    numberblanklines=false,
+    morecomment=[l]{//},
+    morecomment=[s]{/*}{*/},
+    morestring=[b]`,
+    morestring=[b]'
+}
+
+% Styl dla Hono + TypeScript (backend)
+\lstdefinestyle{backend}{
+    basicstyle=\ttfamily\footnotesize,
+    keywordstyle=\color{red!60!black}\bfseries,
+    commentstyle=\color{gray!60}\itshape,
+    stringstyle=\color{green!60!black},
+    numbers=left,
+    numberstyle=\ttfamily\tiny\color{gray}\raisebox{0.5ex},
+    stepnumber=1,
+    numbersep=5pt,
+    breaklines=true,
+    frame=single,
+    backgroundcolor=\color{red!5},
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2,
+    captionpos=b,
+    linewidth=\linewidth,
+    xleftmargin=20pt,
+    xrightmargin=5pt,
+    framexleftmargin=15pt,
+    framexrightmargin=5pt,
+    rulecolor=\color{red!30},
+    literate={ą}{{\k{a}}}1
+             {ć}{{\'c}}1
+             {ę}{{\k{e}}}1
+             {ł}{{\l{}}}1
+             {ń}{{\'n}}1
+             {ó}{{\'o}}1
+             {ś}{{\'s}}1
+             {ź}{{\'z}}1
+             {ż}{{\.z}}1
+             {Ą}{{\k{A}}}1
+             {Ć}{{\'C}}1
+             {Ę}{{\k{E}}}1
+             {Ł}{{\L{}}}1
+             {Ń}{{\'N}}1
+             {Ó}{{\'O}}1
+             {Ś}{{\'S}}1
+             {Ź}{{\'Z}}1
+             {Ż}{{\.Z}}1
+             {{<}}{{$<$}}1
+             {{>}}{{$>$}}1
+             {{~}}{{${\sim}$}}1
+             {{_}}{{\_}}1
+             {{^}}{{${\hat}$}}1
+             {{°}}{{$^{\circ}$}}1,
+    keywords={abstract, as, async, await, boolean, break, case, catch, class, 
+      const, continue, declare, default, delete, do, else, enum, export, 
+      extends, false, finally, for, from, function, get, if, implements, import, in, 
+      instanceof, interface, keyof, let, module, namespace, never, new, null, 
+      number, object, private, protected, public, readonly, require, return, 
+      set, static, string, super, switch, symbol, this, throw, true, try, type, typeof, 
+      undefined, unknown, var, void, while, with, yield,
+      // Hono specific
+      Hono, Context, Next, Middleware, serve, serveStatic, cors, logger, 
+      jwt, basicAuth, etag, compress, prettyJSON, secureHeaders, timeout,
+      get, post, put, delete, patch, options, head, route, use, all, on,
+      // TypeScript specific
+      type, interface, namespace, module, declare, implements, Pick, Omit, Partial, Required},
+    emph={Hono, Context, Next, get, post, put, delete, serve, cors, logger, jwt},
+    emphstyle=\color{red!80!black},
+    lineskip=2pt,
+    aboveskip=10pt,
+    belowskip=10pt,
+    numberblanklines=false,
+    morecomment=[l]{//},
+    morecomment=[s]{/*}{*/},
+    morestring=[b]`,
+    morestring=[b]'
+}
+
+% Styl dla C++ + TypeScript (dodatki - binding/native modules)
+\lstdefinestyle{cpp}{
+    basicstyle=\ttfamily\footnotesize,
+    keywordstyle=\color{brown!70!black}\bfseries,
+    commentstyle=\color{gray!60}\itshape,
+    stringstyle=\color{green!60!black},
+    numbers=left,
+    numberstyle=\ttfamily\tiny\color{gray},
+    stepnumber=1,
+    numbersep=5pt,
+    breaklines=true,
+    frame=single,
+    backgroundcolor=\color{brown!10},
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2,
+    captionpos=b,
+    linewidth=\linewidth,
+    xleftmargin=20pt,
+    xrightmargin=5pt,
+    framexleftmargin=15pt,
+    framexrightmargin=5pt,
+    rulecolor=\color{brown!30},
+    literate={ą}{{ą}}1
+             {ć}{{ć}}1
+             {ę}{{ę}}1
+             {ł}{{ł}}1
+             {ń}{{ń}}1
+             {ó}{{ó}}1
+             {ś}{{ś}}1
+             {ź}{{ź}}1
+             {ż}{{ż}}1
+             {Ą}{{Ą}}1
+             {Ć}{{Ć}}1
+             {Ę}{{Ę}}1
+             {Ł}{{Ł}}1
+             {Ń}{{Ń}}1
+             {Ó}{{Ó}}1
+             {Ś}{{Ś}}1
+             {Ź}{{Ź}}1
+             {Ż}{{Ż}}1,
+    keywords={auto, bool, break, case, catch, char, class, const, constexpr, continue, 
+      default, delete, do, double, else, enum, explicit, export, extern, false, 
+      float, for, friend, goto, if, inline, int, long, namespace, new, noexcept, 
+      nullptr, operator, private, protected, public, register, reinterpret_cast, 
+      return, short, signed, sizeof, static, static_assert, static_cast, struct, 
+      switch, template, this, throw, true, try, typedef, typeid, typename, union, 
+      unsigned, using, virtual, void, volatile, while,
+      type, interface, module, declare, export, import, const, let, function,
+      napi_value, napi_env, napi_callback, napi_deferred, NAPI_CALL, 
+      napi_create_object, napi_set_named_property, napi_get_named_property,
+      optional, vector, uint8_t, string_view, nullopt, size_t, nullptr, mmap,
+      PROT_READ, MAP_SHARED},
+    emph={napi_value, napi_env, class, constexpr, template, type, interface, 
+          NAPI_CALL, optional, vector, uint8_t},
+    emphstyle=\color{brown!80!black},
+    lineskip=2pt,
+    aboveskip=10pt,
+    belowskip=10pt,
+    numberblanklines=false,
+    morecomment=[l]{//},
+    morecomment=[s]{/*}{*/},
+    morestring=[b]",
+    morestring=[b]',
+    extendedchars=true,
+    inputencoding=utf8,
+    deletekeywords={nullptr},
+    keepspaces=true,
+    columns=flexible
+}
+	
+
+\lstset{style=mystyle} % Deklaracja aktywnego stylu
+%===========
+\usepackage{rotating}    %Obracanie tekstu i rysunków (np. diagramy poziome)
+%============
+
+% dodatkowe do emotek LuaLaTeX
+
+\ifluatex
+  \usepackage{fontspec}
+\fi
+\usepackage{pifont}   % for \ding symbols
+\usepackage{xcolor}   % for yellow color
+
+%PAGINA GÓRNA I DOLNA
+\usepackage{fancyhdr}          %Dodaje naglowki jakie się chce.
+\pagestyle{fancy}
+\fancyhf{}
+% numery stron na środku dolnej stopki
+\fancyfoot[C]{\footnotesize DOKUMENTACJA PROJEKTU - ZESPOŁOWE PRZEDSIĘWZIĘCIE INŻYNIERSKIE \\ 
+\normalsize\sffamily  \thepage\ z~\pageref{LastPage}}
+
+
+%\fancyhead[L]{\small\sffamily \nouppercase{\leftmark}}
+\fancyhead[C]{\footnotesize \textit{AKADEMIA NAUK STOSOWANYCH W NOWYM SĄCZU}\\}
+
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}

@@ -1,0 +1,128 @@
+ROZDZIAŁ 1: OPIS SYSTEMU
+
+1. Cel aplikacji
+
+Celem projektu jest opracowanie wieloplatformowej aplikacji desktopowej umożliwiającej realizację sesji zdalnego pulpitu z mechanizmem akceptacji połączenia, czatem tekstowym oraz rozszerzeniami wspierającymi bezpieczeństwo i użyteczność.
+System obejmuje warstwę kliencką i serwerową oraz usługi infrastrukturalne niezbędne do obsługi komunikacji szyfrowanej i połączeń czasu rzeczywistego.
+
+Zakres podstawowy projektu obejmuje:
+- zestawianie i obsługę sesji zdalnego pulpitu,
+- komunikację tekstową pomiędzy uczestnikami sesji,
+- uwierzytelnianie użytkowników i bezpieczne zarządzanie sesją,
+- zgodność z systemami Windows i Linux.
+
+Wymagania rozszerzone (opcjonalne) obejmują transfer plików, nagrywanie sesji dla zalogowanych użytkowników, możliwość ręcznego zakończenia połączenia przez użytkownika docelowego oraz obsługę konfiguracji wielomonitorowych.
+
+2. Lista wymagań
+
+2.1 Wymagania niefunkcjonalne
+
+Wydajność:
+- opóźnienie transmisji obrazu nie powinno przekraczać 500 ms, przy zachowaniu płynności co najmniej 30 FPS w rozdzielczości Full HD,
+- czas odpowiedzi endpointów REST powinien pozostawać poniżej 2000 ms.
+
+Skalowalność:
+- system musi obsłużyć do 50 jednoczesnych sesji na pojedynczej instancji bez degradacji jakości usług.
+
+Użyteczność:
+- użytkownik powinien nawiązać połączenie maksymalnie w 5 kliknięciach od uruchomienia aplikacji.
+
+Bezpieczeństwo:
+- cała komunikacja musi być realizowana przez HTTPS z TLS 1.2 lub nowszym,
+- hasła użytkowników i sesji muszą być przechowywane wyłącznie w formie hashowanej,
+- system powinien ograniczać ryzyko ataków brute-force (limity prób logowania i dołączania do sesji).
+
+Dostępność:
+- docelowa dostępność systemu powinna wynosić co najmniej 99% w środowisku produkcyjnym.
+
+Architektura i utrzymanie:
+- architektura zgodna z podejściem DDD i rozdzieleniem warstw: Domain, Application, Infrastructure,
+- możliwość monitorowania i diagnostyki (health check, metryki).
+
+2.2 Wymagania funkcjonalne
+
+F-01 Zdalny pulpit:
+- użytkownik musi mieć możliwość zdalnego dostępu do pulpitu komputera oraz wykonywania działań na systemie, aplikacjach i plikach.
+
+F-02 Czat tekstowy:
+- system musi umożliwiać wymianę wiadomości tekstowych pomiędzy użytkownikami podczas aktywnej sesji.
+
+F-03 Obsługa wielu platform:
+- aplikacja musi działać co najmniej w środowisku Windows oraz Linux.
+
+F-04 Bezpieczeństwo sesji:
+- system musi realizować uwierzytelnianie użytkowników, kontrolę dostępu i ochronę transmisji danych.
+
+F-05 Akceptacja połączenia:
+- każde żądanie połączenia musi zostać zatwierdzone przez użytkownika docelowego.
+
+F-06 Przechwytywanie obrazu ekranu:
+- aplikacja musi dostarczać strumień klatek ekranu z użyciem natywnego dodatku screen-capture,
+- system powinien umożliwiać przełączanie źródła obrazu pomiędzy monitorami.
+
+F-07 Sterowanie wejściem i schowkiem:
+- aplikacja musi realizować zdalne sterowanie myszą i klawiaturą z użyciem natywnego dodatku input-bridge,
+- system powinien udostępniać synchronizację schowka (tekst i lista plików) między uczestnikami sesji.
+
+2.3 Wymagania specjalistyczne
+- obsługa NAT Traversal z wykorzystaniem STUN/TURN,
+- ochrona przed przejęciem sesji poprzez wygasające kody sesji, hasło sesji i obowiązkową akceptację połączenia,
+- ograniczanie ryzyka ataków brute-force przez limity prób logowania i dołączania do sesji.
+
+3. Diagramy i schematy
+
+W tej sekcji zestawiono wymagania funkcjonalne i niefunkcjonalne oraz kontekst użytkowy.
+Szczegółowe diagramy (architektura komponentów oraz sekwencja zestawiania sesji) znajdują się w rozdziale poświęconym diagramom.
+
+4. Scenariusze użycia
+
+4.1 Rejestracja lub logowanie użytkownika
+Aktor: użytkownik niezalogowany.
+Warunki wstępne: dostępny backend i poprawna konfiguracja TLS.
+Scenariusz podstawowy:
+1) Użytkownik uruchamia aplikację desktopową i wybiera rejestrację lub logowanie.
+2) System prezentuje formularz i zbiera dane uwierzytelniające.
+3) System waliduje dane, tworzy konto lub wydaje tokeny sesji (np. JWT).
+4) Użytkownik uzyskuje dostęp do funkcji wymagających uwierzytelnienia.
+Scenariusz alternatywny:
+- przy błędnych danych system zwraca komunikat i proponuje ponowną próbę lub reset hasła.
+
+4.2 Utworzenie sesji przez gospodarza (host)
+Aktor: gospodarz (host).
+Warunki wstępne: użytkownik zalogowany, backend i cache sesji dostępne.
+Scenariusz podstawowy:
+1) Host inicjuje utworzenie sesji i przekazuje dane sesji (np. kod i hasło).
+2) System zapisuje stan sesji w magazynie tymczasowym (np. Redis/Valkey) z określonym TTL.
+3) System zwraca potwierdzenie utworzenia sesji oraz dane potrzebne gościowi do dołączenia.
+Scenariusz alternatywny:
+- przy błędzie walidacji lub braku uprawnień system odrzuca żądanie i informuje hosta.
+
+4.3 Dołączenie gościa (guest) do sesji
+Aktor: gość (guest).
+Warunki wstępne: sesja istnieje i akceptuje dołączenia.
+Scenariusz podstawowy:
+1) Gość wprowadza kod i hasło sesji.
+2) System weryfikuje poprawność danych oraz stan sesji.
+3) System przekazuje do hosta zdarzenie z prośbą o akceptację połączenia (kanał realtime).
+Scenariusz alternatywny:
+- przy niepoprawnym kodzie lub wygaśnięciu sesji system odmawia dołączenia i informuje gościa.
+
+4.4 Akceptacja lub odrzucenie połączenia
+Aktor: gospodarz (host).
+Warunki wstępne: gość zainicjował dołączenie i oczekuje na decyzję hosta.
+Scenariusz podstawowy:
+1) Host otrzymuje powiadomienie o prośbie o dostęp.
+2) Host akceptuje połączenie.
+3) System informuje gościa o możliwości przejścia do negocjacji WebRTC (SDP/ICE).
+Scenariusz alternatywny:
+- host odrzuca prośbę, system zamyka ścieżkę dołączenia i informuje gościa.
+
+4.5 Zestawienie kanału WebRTC i praca zdalna
+Aktorzy: host i gość.
+Warunki wstępne: połączenie zostało zaakceptowane, dostępna sygnalizacja oraz STUN/TURN.
+Scenariusz podstawowy:
+1) System koordynuje wymianę ofert/odpowiedzi SDP oraz kandydatów ICE.
+2) Użytkownicy uzyskują kanał transmisji zdalnego pulpitu i mogą korzystać z czatu.
+3) Po zakończeniu pracy użytkownik zamyka sesję, a system sprząta stan połączenia.
+Scenariusz alternatywny:
+- przy utracie sieci lub błędzie ICE system informuje strony o problemie i kończy lub próbuje odtworzyć sesję zgodnie z implementacją.

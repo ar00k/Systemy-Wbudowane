@@ -1,0 +1,140 @@
+{
+  "latex-workshop.latex.recipe.default": "lualatex-draft -> biber -> lualatex*2",
+  "latex-workshop.latex.autoClean.run": "onBuilt",
+  "latex-workshop.latex.build.rootfileInStatus": true,
+  "latex-workshop.linting.chktex.enabled": true,
+  "latex-workshop.linting.lacheck.enabled": true,
+  "latex-workshop.synctex.afterBuild.enabled": true,
+  "latex-workshop.view.pdf.viewer": "tab",
+  "latex-workshop.latex.autoBuild.cleanAndRetry.enabled": false,
+  "latex-workshop.latex.clean.method": "glob",
+  "latex-workshop.hover.preview.enabled": true,
+  "latex-workshop.latex.clean.fileTypes": [
+    "*.aux",
+    "*.bbl*",
+    "*.bbl",
+    "*.blg",
+    "*.idx",
+    "*.ind",
+    "*.lof",
+    "*.lot",
+    "*.out",
+    "*.toc",
+    "*.acn",
+    "*.acr",
+    "*.alg",
+    "*.glg",
+    "*.glo",
+    "*.gls",
+    "*.fls",
+    "*.log",
+    "*.fdb_latexmk",
+    "*.snm",
+    "*.synctex(busy)",
+    "*.synctex.gz(busy)",
+    "*.nav"
+  ],
+  "latex-workshop.latex.tools": [
+    {
+      "name": "GhostScript",
+      "command": "gs",
+      "args": [
+        "-sDEVICE=pdfwrite",
+        "-dCompatibilityLevel=1.5",
+        "-dNOPAUSE",
+        "-dQUIET",
+        "-dBATCH",
+        "-dPrinted=false",
+        "-sOutputFile=%DOCFILE%-compressed.pdf",
+        "%DOCFILE%.pdf"
+      ]
+    },
+    {
+      "name": "lualatex",
+      "command": "lualatex",
+      "args": [
+        "-interaction=nonstopmode",
+        "--shell-escape",
+        "-synctex=1",
+        "%DOC%"
+      ]
+    },
+    {
+      "name": "lualatex-draft",
+      "command": "lualatex",
+      "args": [
+        "-interaction=nonstopmode",
+        "--shell-escape",
+        "-draftmode",
+        "%DOC%"
+      ]
+    },
+    {
+      "name": "pdflatex",
+      "command": "pdflatex",
+      "args": [
+        "--interaction=nonstopmode",
+        "--shell-escape",
+        "-synctex=1",
+        "%DOC%"
+      ]
+    },
+    {
+      "name": "pdflatex-draft",
+      "command": "pdflatex",
+      "args": [
+        "--interaction=nonstopmode",
+        "--shell-escape",
+        "-draftmode",
+        "-synctex=1",
+        "%DOC%"
+      ]
+    },
+    {
+      "name": "biber",
+      "command": "biber",
+      "args": [
+        "%DOC%"
+      ]
+    }
+  ],
+  "latex-workshop.latex.recipes": [
+    {
+      "name": "lualatex-draft -> biber -> lualatex*2",
+      "tools": [
+        "lualatex-draft",
+        "biber",
+        "lualatex",
+        "lualatex",
+        "GhostScript"
+      ]
+    },
+    {
+      "name": "[Without biber] -> lualatex*2",
+      "tools": [
+        "lualatex",
+        "lualatex",
+        "GhostScript"
+      ]
+    },
+    {
+      "name": "pdflatex-draft -> biber -> pdflatex-draft -> pdflatex",
+      "tools": [
+        "pdflatex-draft",
+        "biber",
+        "pdflatex-draft",
+        "pdflatex",
+        "GhostScript"
+      ]
+    },
+    {
+      "name": "[Without biber] pdflatex-draft -> pdflatex-draft -> pdflatex",
+      "tools": [
+        "pdflatex-draft",
+        "pdflatex-draft",
+        "pdflatex",
+        "GhostScript"
+      ]
+    }
+  ]
+}

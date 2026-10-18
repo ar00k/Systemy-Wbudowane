@@ -1,0 +1,110 @@
+% !TEX program = lualatex
+%╔════════════════════════════╗
+%║	  Szablon dostosował	  ║
+%║	        Kotlet            ║
+%║		  06.10.2024		  ║
+%╚════════════════════════════╝
+\documentclass[12pt,oneside,a4paper,openany]{article}
+
+    \input{preambula_pakiety.tex}
+    \input{preambula_ustawienia.tex}
+
+    %polecenia zdefiniowane w pakiecie strona_tytulowa.sty
+    \title{"Sekwencyjne uruchamianie trzech napędów\\ w środowisku LOGO! Soft Comfort"}		%...Wpisać nazwę projektu...
+    \author{Maciej Wójs}
+    \authorI{Dominik Żuchowicz}
+    \authorII{Jakub Tokarczyk}		%jeśli są dwie osoby w projekcie to zostawiamy:    \authorII{}
+    \authorIII{Arkadiusz Ryczek}			%jeśli są trzy osoby w projekcie to zostawiamy:    \authorIII{}
+		
+	\uczelnia{AKADEMIA NAUK STOSOWANYCH \\W NOWYM SĄCZU}
+    \instytut{Wydział Nauk Inżynieryjnych}
+    \kierunek{Katedra Informatyki}
+    \praca{SPRAWOZDANIE Z LABORATORIUM}
+    \przedmiot{Systemy wbudowane}
+    \prowadzacy{dr inż. Ihor Pazdriy}
+    \rok{2026}
+
+
+%definicja składni mikrotik
+\usepackage{fancyvrb}
+\DefineVerbatimEnvironment{MT}{Verbatim}%
+{commandchars=\+\[\],fontsize=\small,formatcom=\color{red},frame=lines,baselinestretch=1,} 
+\let\mt\verb 
+%zakonczenie definicji składni mikrotik
+
+\usepackage{fancyhdr}    %biblioteka do nagłówka i stopki
+
+			
+\begin{document}
+   
+    \renewcommand{\figurename}{Rys.}    %musi byc pod \begin{document}, bo w~tym miejscu pakiet 'babel' narzuca swoje ustawienia
+    \renewcommand{\tablename}{Tab.}     %j.w.
+    \thispagestyle{empty}               %na tej stronie: brak numeru
+    \stronatytulowa                     %strona tytułowa tworzona przez pakiet strona_tytulowa.tex
+ 
+ \pagestyle{fancy}
+
+    \newpage
+
+    %formatowanie spisu treści i~nagłówków
+    \renewcommand{\cftbeforesecskip}{8pt}
+    \renewcommand{\cftsecafterpnum}{\vskip 8pt}
+    \renewcommand{\cftparskip}{3pt}
+    \renewcommand{\cfttoctitlefont}{\Large\bfseries\sffamily}
+    \renewcommand{\cftsecfont}{\bfseries\sffamily}
+    \renewcommand{\cftsubsecfont}{\sffamily}
+    \renewcommand{\cftsubsubsecfont}{\sffamily}
+    \renewcommand{\cftparafont}{\sffamily}
+    %koniec formatowania spisu treści i nagłówków
+     
+    \tableofcontents    %spis treści
+    \thispagestyle{fancy}
+    \newpage
+
+    
+    \newpage
+
+    
+%%%%%%%%%%%%%%%%%%% treść główna dokumentu %%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \input{tex/rozdzial1.tex}
+   \input{tex/rozdzial2.tex}
+   \input{tex/rozdzial3.tex}
+   \input{tex/rozdzial4.tex}
+   \input{tex/rozdzial5.tex}
+   
+       
+%%%%%%%%%%%%%%%%%%% koniec treść główna dokumentu %%%%%%%%%%%%%%%%%%%%%
+	\newpage
+% \addcontentsline{toc}{section}{Literatura}
+% Modified by: zespół projektowy
+%Wyświetlanie bibliografii jako "Literatura", w spisie treści wyświetla się podbnie do \section
+\printbibliography[heading=bibnumbered, label=Literatura, title=Literatura]
+
+    \newpage
+    \hypersetup{linkcolor=black}
+    \renewcommand{\cftparskip}{3pt}
+    \clearpage
+    \renewcommand{\cftloftitlefont}{\Large\bfseries\sffamily}
+    \listoffigures
+    \addcontentsline{toc}{section}{Spis rysunków}
+	\thispagestyle{fancy}
+	
+    \newpage
+    \renewcommand{\cftlottitlefont}{\Large\bfseries\sffamily}
+    \def\listtablename{Spis tabel}
+    \addcontentsline{toc}{section}{Spis tabel}\listoftables 
+	\thispagestyle{fancy}
+	
+	\newpage
+	\renewcommand{\cftlottitlefont}{\Large\bfseries\sffamily}
+	\renewcommand\lstlistlistingname{Spis listingów}
+	\addcontentsline{toc}{section}{Spis listingów}\lstlistoflistings 
+	\thispagestyle{fancy}
+	
+
+
+    %lista rzeczy do zrobienia: wypisuje na koñcu dokumentu, patrz: pakiet todo.sty
+    \todos
+    %koniec listy rzeczy do zrobienia
+\end{document}

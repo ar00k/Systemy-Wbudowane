@@ -1,0 +1,14 @@
+ROZDZIAŁ 5: DIAGRAMY I SCHEMATY
+
+Diagramy w katalogu rys/ są generowane ze źródeł Mermaid w katalogu kod/.
+
+Aby je odświeżyć po edycji plików .mmd, uruchom z katalogu głównego dokumentacji:
+./kod/export-diagramy.sh
+
+Wymagania:
+- Node.js
+- @mermaid-js/mermaid-cli
+
+Uwzględnione diagramy:
+- Schemat architektury systemu w notacji Mermaid (plik: rys/diagram-architektura.png)
+- Schemat sekwencji zestawiania połączenia w notacji Mermaid (plik: rys/diagram-sesja-polaczenia.png)

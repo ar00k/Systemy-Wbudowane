@@ -1,0 +1,66 @@
+\section{Cel ćwiczenia}
+
+Celem zajęć było samodzielne zbudowanie, w kilku kolejnych przybliżeniach, programu sterującego trzema napędami taśmociągów pracujących w jednym ciągu. Program powstawał w języku drabinkowym w środowisku LOGO! Soft Comfort i był sprawdzany w symulacji sterownika Siemens LOGO!.
+
+Chodziło o to, żeby kolejne silniki włączały się z zadanym opóźnieniem, żeby układ dało się zatrzymać w dowolnej chwili i żeby nie ruszał sam po powrocie zasilania. W dalszych krokach dołożone zostały sygnały awarii oraz warunek, że następny odcinek linii może pracować tylko wtedy, gdy pracuje odcinek, od którego zależy transport.
+
+Po ćwiczeniu potrafimy:
+
+\begin{itemize}
+    \item rozróżnić wejścia, wyjścia, markery i timery sterownika LOGO!,
+    \item zapisać prosty algorytm rozruchu sekwencyjnego w języku LAD,
+    \item zastosować timer załączający z opóźnieniem oraz podtrzymanie stanu na markerze,
+    \item uwzględnić styki awaryjne napędów i blokadę kolejności załączeń,
+    \item sprawdzić działanie programu w symulatorze przed przeniesieniem go na sterownik.
+\end{itemize}
+
+\section{Stanowisko}
+
+Do pracy użyliśmy komputera z zainstalowanym LOGO! Soft Comfort oraz sterownika Siemens LOGO!. Program rysowaliśmy jako schemat drabinkowy, nastawy timerów i przypisanie wejść sprawdzaliśmy najpierw w symulacji, a następnie na samym sterowniku.
+
+Przypisanie sygnałów, do którego doszliśmy w końcowej wersji programu, zebraliśmy w tabeli~\ref{tab:io}.
+
+\begin{table}[h]
+    \centering
+    \caption{Wejścia i wyjścia użyte w programie}
+    \label{tab:io}
+    \begin{tabular}{|l|l|p{8.5cm}|}
+        \hline
+        \textbf{Adres} & \textbf{Element} & \textbf{Rola} \\
+        \hline
+        I1 & przycisk START & impuls załączenia układu \\
+        \hline
+        I2 & przycisk STOP & zatrzymanie i zdjęcie podtrzymania \\
+        \hline
+        I3 & awaria napędu 1 & styk wyłącznika silnikowego \\
+        \hline
+        I4 & awaria napędu 2 & styk wyłącznika silnikowego \\
+        \hline
+        I5 & awaria napędu 3 & styk wyłącznika silnikowego \\
+        \hline
+        Q1 & napęd 1 & pierwszy odcinek taśmociągu \\
+        \hline
+        Q2 & napęd 2 & środkowy odcinek taśmociągu \\
+        \hline
+        Q3 & napęd 3 & ostatni odcinek taśmociągu \\
+        \hline
+        M1 & marker & pamięć stanu „układ załączony” \\
+        \hline
+        T1, T2 & timery & odstępy między kolejnymi rozruchami \\
+        \hline
+    \end{tabular}
+\end{table}
+
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=0.85\textwidth]{rys/stanowisko.png}
+%     \caption{Stanowisko ze sterownikiem Siemens LOGO!}
+%     \label{fig:stanowisko}
+% \end{figure}
+
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=0.85\textwidth]{rys/logo-soft.png}
+%     \caption{Okno projektu w LOGO! Soft Comfort}
+%     \label{fig:logo-soft}
+% \end{figure}

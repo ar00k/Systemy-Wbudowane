@@ -1,0 +1,35 @@
+sequenceDiagram
+    participant Host as Host (Klient 1)
+    participant API as Backend REST
+    participant Cache as Redis/Valkey
+    participant Guest as Guest (Klient 2)
+    participant WS as Backend Socket.IO
+
+    Host->>API: POST /connections (haslo, dane urzadzenia)
+    API->>Cache: Zapis sesji (TTL = 120s)
+    API-->>Host: 200 OK + code + connectionUUID + token(HOST)
+
+    Guest->>API: POST /connections/join (connectionCode, haslo, dane urzadzenia)
+    API->>Cache: Walidacja kodu i statusu sesji
+    API-->>Guest: 200 OK + connectionUUID + token(GUEST)
+
+    Guest->>WS: connect (connectionToken=GUEST)
+    Host->>WS: connect (connectionToken=HOST)
+    Guest->>WS: connection:request-access
+    WS-->>Host: connection:request-access
+
+    alt Akceptacja
+        Host-->>WS: connection:accept
+        WS-->>Guest: connection:accepted
+        Guest-->>Host: Wymiana WebRTC (offer/answer/ice-candidate)
+    else Odrzucenie
+        Host-->>WS: connection:reject
+        WS-->>Guest: connection:rejected
+    end
+
+    opt Zakończenie sesji
+        Host-->>WS: connection:disconnect
+        WS->>WS: disconnectSockets(room)
+        WS-->>Host: rozlaczenie transportowe socketu
+        WS-->>Guest: rozlaczenie transportowe socketu
+    end

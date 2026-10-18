@@ -1,0 +1,69 @@
+ROZDZIAŁ 2: PORADNIK UŻYTKOWNIKA
+
+1. Wprowadzenie
+
+Niniejszy poradnik przedstawia zalecany sposób przygotowania środowiska oraz uruchomienia komponentów systemu zdalnej pomocy.
+Rozwiązanie składa się z aplikacji desktopowej (opartej o Electron i TypeScript) oraz backendu usługowego (REST i komunikacja realtime), wraz z komponentami infrastrukturalnymi (reverse proxy, cache sesji, opcjonalnie STUN/TURN).
+
+2. Wymagania systemowe
+
+Do pracy z projektem i uruchomienia środowiska developerskiego lub zbliżonego do produkcyjnego zaleca się:
+- Bun lub Node.js (wersja zgodna z repozytorium kodu),
+- Docker oraz Docker Compose,
+- Git,
+- coturn (na hoście lub VPS) jako opcjonalne wsparcie połączeń WebRTC w środowiskach NAT.
+
+3. Uruchomienie backendu i usług towarzyszących
+
+3.1 Konfiguracja repozytorium
+Pobierz kod źródłowy projektu i przejdź do katalogu zawierającego konfigurację kontenerów oraz backend.
+Przykład:
+git clone <URL_repozytorium_projektu>
+cd <katalog_projektu>
+
+3.2 Zmienne środowiskowe
+Backend oraz usługi towarzyszące wymagają poprawnie ustawionych zmiennych środowiskowych (np. dane dostępowe do bazy, sekrety JWT, adresy frontu, parametry TLS).
+Przykładowy fragment:
+- DATABASE_URL=postgresql://user:pass@host:5432/db
+- JWT_ACCESS_SECRET=zmien_mnie
+- JWT_REFRESH_SECRET=zmien_mnie
+- REDIS_URL=redis://redis:6379
+
+3.3 Migracje i inicjalizacja danych
+Jeżeli projekt wykorzystuje migracje schematu bazy danych, wykonaj je przed pierwszym uruchomieniem API zgodnie z instrukcją w repozytorium.
+
+3.4 Uruchomienie z Docker Compose
+Zalecany sposób uruchomienia pełnego zestawu usług:
+- docker compose up --build
+lub:
+- docker-compose up --build
+
+Po starcie usług adresy endpointów (API, health check, metryki) oraz podgląd logów powinny być zgodne z plikiem compose i dokumentacją operacyjną projektu.
+
+4. Uruchomienie aplikacji desktopowej
+
+4.1 Instalacja zależności
+W katalogu aplikacji desktopowej zainstaluj zależności:
+- bun install
+
+4.2 Tryb deweloperski
+Uruchomienie w trybie developerskim zależy od skryptów zdefiniowanych w package.json.
+Typowo:
+- bun run dev
+
+4.3 Konfiguracja połączenia z backendem
+Upewnij się, że aplikacja wskazuje poprawny adres API oraz (jeśli dotyczy) konfigurację kanału Socket.IO zgodnie ze środowiskiem (localhost, sieć lokalna lub domena z TLS).
+
+5. Weryfikacja działania
+
+Po uruchomieniu backendu warto sprawdzić:
+- endpointy diagnostyczne (np. health / deep health),
+- dostępność usługi realtime,
+- poprawność certyfikatów TLS po stronie reverse proxy.
+
+6. Struktura repozytoriów (orientacyjnie)
+
+Dokładny układ katalogów jest zdefiniowany w repozytorium kodu. Orientacyjnie wyróżnia się:
+- moduł backendu (routery, middleware, warstwa domeny i infrastruktury),
+- moduł klienta Electron (proces main, preload, renderer),
+- konfiguracje kontenerów i reverse proxy.

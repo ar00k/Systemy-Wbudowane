@@ -1,0 +1,13 @@
+\section{Wnioski}
+
+Ćwiczenie doprowadziliśmy do programu, który uruchamia trzy napędy taśmociągów z opóźnieniem, od końca linii albo --- po zamianie cewek --- od jej początku. Sterowanie jest przyciskami monostabilnymi, stan pracy trzyma marker, a awaria napędu i brak pracy odcinka nadrzędnego blokują dalszą kaskadę.
+
+Z samego budowania kolejnych wersji wynika kilka rzeczy, które przy pierwszym szkicu łatwo pominąć.
+
+Przełącznik bistabilny jako START wygląda prosto, bo jeden sygnał trzyma całą logikę. Przy taśmociągu jest to wada: po przerwie w zasilaniu układ wstaje sam, jeśli przełącznik został załączony. Marker podtrzymywany stykiem własnym i zrywany zanegowanym STOP rozwiązuje ten problem bez dokładania przekaźnika poza sterownikiem. Po restarcie M1 jest zerem i linia czeka na operatora.
+
+Sam timer ustawia tylko chwilę, w której wolno załączyć następny silnik. Nie wie, czy poprzedni odcinek naprawdę się kręci. Styk Q poprzedniego napędu w szeregu z cewką następnego spina te dwa warunki. Przy ciągu transportowym rozsądniejszy jest rozruch od końca: pusty odcinek odbiorczy rusza pierwszy i materiał ma gdzie pojechać. Wersja „od początku” zostaje poprawna elektrycznie, ale łatwiej o spiętrzenie na nieruchomej taśmie.
+
+Sygnał z wyłącznika silnikowego trzeba wciągnąć do tego samego szeregu co cewkę danego napędu. Inaczej program świeci wyjściem, którego silnik już nie obraca, a kolejny odcinek --- jeśli patrzy tylko na Q --- uzna, że droga jest wolna.
+
+Symulacja w LOGO! Soft Comfort wystarczyła, żeby ułożyć szczebel po szczeblu i złapać błędy kolejności oraz podtrzymania, zanim cokolwiek podaliśmy na zaciski. Na sterowniku potwierdziliśmy to samo przy prawdziwych przyciskach. Symulator nie zastępuje styku awaryjnego ani zachowania linii po zaniku napięcia, ale bez niego szukalibyśmy tych błędów już na obiekcie.
