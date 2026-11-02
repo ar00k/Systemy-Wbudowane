@@ -1,0 +1,3 @@
+potrzebuje zrobić sprawozdania na przedmiot systemy wbudowane. Mamy zrobić opis problemu, potem przedstawić bramkami logicznymi, potem uprościć,dać tabelke prawdy jeżeli ma to sens , a potem przedstawić w jakimś stylu drabinkowym? wiem tyle że potem trzeba było obrócić o 90 stopni.
+Problem jaki chce rozwiązać do tego zadania to 4 włącznikowa klatka schodowa. Jeżeli świeci sie i jakikolwiek zostanie wciśnięty to światło gaśnie. Ma też gasnąć samoistnie po 2 minutach jeżeli czujnik ruchu (czyli kolejne wejście) nie wykryje żadnego ruchu.
+Format latex, styl pisania akademicki. Podziel na milestone jeżeli trzeba. W outpucie mam mieć wszystkie pliki jakich używasz a nie tylko pdf. Rób graficzne reprezentacje układów ( jeżeli mają kod to mi go daj, i wskaż jakim programem)

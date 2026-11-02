@@ -1,0 +1,34 @@
+\section{Uproszczenie wyrażenia logicznego}
+\label{sec:uproszczenie}
+
+Wychodzimy od równania~\eqref{eq:main}:
+\begin{align}
+    Q_{\text{next}}
+    &= (P \oplus Q)\land \lnot T \nonumber\\
+    &= (P\lnot Q + \lnot P Q)\,\lnot T \nonumber\\
+    &= P\,\lnot Q\,\lnot T \;+\; \lnot P\,Q\,\lnot T .
+    \label{eq:sop}
+\end{align}
+
+Wyrażenie~\eqref{eq:sop} jest \emph{minimalną} postacią
+dysjunkcyjną (SOP). Nie da się jej dalej zredukować bez zmiany
+interpretacji fizycznej, ponieważ:
+\begin{itemize}
+    \item pierwszy składnik $P\bar Q\bar T$ odpowiada sytuacji
+          ,,światło zgaszone, przycisk wciśnięty, brak przekroczenia czasu''
+          – włączenie światła,
+    \item drugi składnik $\bar P Q\bar T$ odpowiada sytuacji
+          ,,światło świeci, przycisk wciśnięty, brak przekroczenia czasu''
+          – wyłączenie światła.
+\end{itemize}
+
+Równoważnie można pozostawić postać z bramką XOR:
+\begin{equation}
+    Q_{\text{next}} = (P \oplus Q)\,\lnot T,
+\end{equation}
+która jest korzystniejsza sprzętowo (jedna bramka XOR + jedna AND
+zamiast czterech bramek AND, dwóch NOT i jednej OR).
+
+\paragraph{Wniosek.} Realizacja sprzętowa powinna użyć
+\textbf{bramki XOR} – pozwala to zaoszczędzić 4 bramki względem
+postaci SOP.

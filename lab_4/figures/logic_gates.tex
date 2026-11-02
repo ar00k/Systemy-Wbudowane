@@ -1,0 +1,122 @@
+% figures/logic_gates.tex
+% Ręcznie rysowane bramki w stylu ANSI/US.
+% Współrzędne: (x rośnie w prawo, y rośnie w górę).
+\begin{tikzpicture}[
+    thick, font=\small,
+    >={Latex[length=2mm]}
+]
+
+% =========================================================
+%  WEJŚCIA  S1..S4
+% =========================================================
+\node (S1) at (0, 4.4) {$S_1$};
+\node (S2) at (0, 3.6) {$S_2$};
+\node (S3) at (0, 1.4) {$S_3$};
+\node (S4) at (0, 0.6) {$S_4$};
+
+% =========================================================
+%  BRAMKA OR (4-wejściowa)
+%  Środek pionowy: y=2.5, lewa krawędź x=2.0, szer. 1.6, pół-wys. 1.4
+% =========================================================
+\def\orL{2.0}
+\def\orC{2.5}
+\def\orW{1.6}
+\def\orH{1.4}
+
+% Korpus bramki OR: górna krawędź, dolna krawędź i łuk z tyłu
+\draw (\orL, \orC+\orH)
+    .. controls (\orL+0.6, \orC+\orH) and (\orL+1.1, \orC+0.6)
+    .. (\orL+\orW, \orC)
+    .. controls (\orL+1.1, \orC-0.6) and (\orL+0.6, \orC-\orH)
+    .. (\orL, \orC-\orH)
+    .. controls (\orL+0.5, \orC-0.7) and (\orL+0.5, \orC+0.7)
+    .. (\orL, \orC+\orH);
+
+% Wprowadzenia S1..S4 do bramki OR
+\draw (S1.east) -- (2.55, 4.4) -- (2.55, 3.5);
+\draw (S2.east) -- (2.55, 3.6) -- (2.55, 3.0);
+\draw (S3.east) -- (2.55, 1.4) -- (2.55, 2.0);
+\draw (S4.east) -- (2.55, 0.6) -- (2.55, 1.5);
+
+% Wyjście OR -> P
+\draw (\orL+\orW, \orC) -- (5.2, \orC);
+\node[above] at (4.5, \orC) {$P$};
+
+% =========================================================
+%  BRAMKA XOR (2-wejściowa)
+%  Środek: (6.2, 2.5), szer. 1.2, pół-wys. 0.9
+% =========================================================
+\def\xorL{5.6}
+\def\xorC{2.5}
+\def\xorW{1.2}
+\def\xorH{0.9}
+
+% Korpus XOR (identyczny jak OR)
+\draw (\xorL, \xorC+\xorH)
+    .. controls (\xorL+0.45, \xorC+\xorH) and (\xorL+0.8, \xorC+0.4)
+    .. (\xorL+\xorW, \xorC)
+    .. controls (\xorL+0.8, \xorC-0.4) and (\xorL+0.45, \xorC-\xorH)
+    .. (\xorL, \xorC-\xorH)
+    .. controls (\xorL+0.4, \xorC-0.45) and (\xorL+0.4, \xorC+0.45)
+    .. (\xorL, \xorC+\xorH);
+
+% Dodatkowy łuk z przodu (charakterystyczny dla XOR)
+\draw (\xorL-0.22, \xorC+\xorH)
+    .. controls (\xorL+0.18, \xorC+0.4) and (\xorL+0.18, \xorC-0.4)
+    .. (\xorL-0.22, \xorC-\xorH);
+
+% Wejście P do XOR
+\draw (5.2, \orC) -- (\xorL-0.22, \orC) -- (\xorL-0.22, \xorC+0.4) -- (\xorL+0.3, \xorC+0.4);
+
+% Wejście Q do XOR
+\node (Qin) at (5.6, 4.6) {$Q$};
+\draw (Qin.south) -- (5.6, 3.8) -- (\xorL-0.22, 3.8) -- (\xorL-0.22, \xorC-0.4) -- (\xorL+0.3, \xorC-0.4);
+
+% Wyjście XOR
+\draw (\xorL+\xorW, \xorC) -- (8.3, \xorC);
+
+% =========================================================
+%  BRAMKA AND (2-wejściowa)
+%  Środek: (9.4, 2.5), szer. 1.2, pół-wys. 0.9
+% =========================================================
+\def\andL{8.3}
+\def\andC{2.5}
+\def\andW{1.2}
+\def\andH{0.9}
+
+% Korpus AND: prostokąt + półkole z prawej strony
+\draw (\andL, \andC+\andH) -- (\andL+0.6, \andC+\andH)
+      arc[start angle=90, end angle=-90, radius=0.9];
+\draw (\andL, \andC-\andH) -- (\andL+0.6, \andC-\andH);
+
+% Wejście 1 (z XOR)
+\draw (8.3, \xorC) -- (\andL+0.3, \andC+0.4);
+% (poprawka: wyrównujemy do poziomu wejścia AND; XOR wyjście jest na y=2.5,
+%  więc trzeba lekko zejść)
+\draw[white, line width=3pt] (8.3, \xorC) -- (\andL+0.3, \andC+0.4); % czyścimy poprzednią
+\draw (8.3, \xorC) -- (8.5, \xorC) -- (8.5, \andC+0.4) -- (\andL+0.3, \andC+0.4);
+
+% Wejście 2 (z NOT T)
+\draw (\andL+0.3, \andC-0.4) -- (7.8, \andC-0.4) -- (7.8, 0.9);
+
+% =========================================================
+%  BRAMKA NOT (dla T) - trójkąt z kółkiem
+% =========================================================
+\def\notX{6.9}
+\def\notY{0.9}
+\draw (\notX, \notY+0.35) -- (\notX, \notY-0.35) -- (\notX+0.7, \notY) -- cycle;
+\draw (\notX+0.7, \notY) circle[radius=0.08];
+
+% Wejście T
+\node (T) at (\notX-0.5, \notY-1.2) {$T$};
+\draw (T.north) -- (\notX, \notY-1.2) -- (\notX, \notY);
+
+% Wyjście NOT -> AND wejście 2
+\draw (\notX+0.78, \notY) -- (7.8, \notY) -- (7.8, \andC-0.4) -- (\andL+0.3, \andC-0.4);
+
+% =========================================================
+%  WYJŚCIE
+% =========================================================
+\draw (\andL+0.6+0.9, \andC) -- (10.8, \andC) node[right] {$Q_{\text{next}}$};
+
+\end{tikzpicture}

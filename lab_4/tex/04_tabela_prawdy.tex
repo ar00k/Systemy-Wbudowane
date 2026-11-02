@@ -1,0 +1,30 @@
+\section{Tabela prawdy}
+\label{sec:tabela}
+
+Tabela prawdy dla wyrażenia~\eqref{eq:sop} zawiera $2^3 = 8$ wierszy
+(trzy zmienne wejściowe: $Q$, $P$, $T$).
+
+\begin{table}[H]
+\centering
+\caption{Tabela prawdy układu.}
+\label{tab:truth}
+\begin{tabular}{ccc|c|l}
+\toprule
+$Q$ & $P$ & $T$ & $Q_{\text{next}}$ & Interpretacja \\
+\midrule
+0 & 0 & 0 & 0 & ciemno, brak przycisku, brak przekroczenia czasu \\
+0 & 0 & 1 & 0 & ciemno, bez zmian \\
+0 & 1 & 0 & 1 & \textbf{włączenie} światła przyciskiem \\
+0 & 1 & 1 & 0 & przycisk wciśnięty, ale timeout gasi światło \\
+1 & 0 & 0 & 1 & świeci, brak przycisku, brak timeoutu \\
+1 & 0 & 1 & 0 & \textbf{automatyczne wyłączenie} po 2 min bezruchu \\
+1 & 1 & 0 & 0 & \textbf{wyłączenie} światła przyciskiem \\
+1 & 1 & 1 & 0 & timeout wygrywa nad przyciskiem \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Uwaga projektowa.} W wierszach, w których $T=1$, wyjście
+jest zerowane niezależnie od stanu $P$ i $Q$ – jest to zamierzone:
+sygnał timeoutu ma najwyższy priorytet (asynchroniczne kasowanie
+przerzutnika).

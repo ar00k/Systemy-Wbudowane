@@ -1,0 +1,52 @@
+\section{Opis problemu}
+\label{sec:problem}
+
+\subsection{Sformułowanie wymagań}
+Rozważamy oświetlenie klatki schodowej sterowane z czterech przycisków
+monostabilnych $S_1, S_2, S_3, S_4$ (po jednym na każdym piętrze) oraz
+z czujnika ruchu oznaczonego dalej jako $M$. Wymagania
+funkcjonalne są następujące:
+
+\begin{enumerate}
+    \item Światło można \textbf{włączyć} z dowolnego z czterech przycisków
+          (gdy jest zgaszone).
+    \item Jeżeli światło \textbf{świeci} i zostanie wciśnięty
+          \emph{jakikolwiek} przycisk, światło gaśnie.
+    \item Jeżeli światło świeci i przez \SI{2}{\minute} czujnik ruchu nie
+          wykryje żadnego ruchu, światło gaśnie samoczynnie.
+    \item Każde wykrycie ruchu przez czujnik $M$ \textbf{zeruje} odliczanie
+          czasu (przedłuża świecenie o kolejne \SI{2}{\minute}).
+\end{enumerate}
+
+Punkty 1–2 sprowadzają się do klasycznego zachowania
+\emph{przerzutnika typu T} (toggle): każde zbocze narastające sygnału
+,,wciśnięto przycisk'' zmienia stan wyjścia $Q$. Punkt 3–4 realizuje
+asynchroniczne zerowanie po upływie zadanego czasu bezruchu.
+
+\subsection{Wielkości wejściowe i wyjściowe}
+\begin{table}[H]
+\centering
+\caption{Zestawienie sygnałów układu.}
+\begin{tabular}{cll}
+\toprule
+Symbol & Znaczenie & Typ \\
+\midrule
+$S_1,\dots,S_4$ & przyciski na piętrach & wejście, chwilowe \\
+$M$              & czujnik ruchu     & wejście, poziom \\
+$T$              & sygnał przekroczenia \SI{2}{\minute} bezruchu & wewnętrzny \\
+$Q$              & stan oświetlenia (1 = świeci) & wyjście \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Założenia projektowe}
+\begin{itemize}
+    \item Wszystkie przyciski są \emph{monostabilne}, tzn. sygnał jest
+          aktywny tylko w trakcie naciśnięcia.
+    \item Reakcja na ,,jakikolwiek przycisk'' modelowana jest bramką OR:
+          $P = S_1 \lor S_2 \lor S_3 \lor S_4$.
+    \item W części cyfrowej zakładamy, że sygnał $T$ jest już wytworzony
+          przez timer (np. w mikrokontrolerze). W części 5 pokażemy go
+          jako przekaźnik czasowy w schemacie drabinkowym.
+    \item Stan wyjścia opisujemy zmienną $Q$; stan następny – $Q_{\text{next}}$.
+\end{itemize}
