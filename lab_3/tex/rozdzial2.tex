@@ -1,0 +1,12 @@
+\newpage
+\section{Od funkcji do programu}
+
+Instrukcja każe iść w jednej kolejności: opis zadania, wejścia i wyjścia, tablica prawdy, funkcja logiczna, minimalizacja, schemat logiczny, program PLC, a na końcu test sprzętowy. Ostatniego punktu nie robimy. Reszty trzymaliśmy się w każdym zadaniu tak samo, więc tutaj jest tylko to, co powtarzałoby się trzy razy.
+
+Wyjście zapisujemy jako $Y = f(X)$. Wektor $X$ to bieżące wejścia, i nic ponadto. Dla trzech wejść tablica ma osiem wierszy, dla czterech szesnaście. Każdy wiersz, w którym wyjście jest jedynką, daje jeden iloczyn: zmienna, która w tym wierszu jest zerem, wchodzi do iloczynu zanegowana. Suma tych iloczynów jest kanoniczną postacią funkcji. Minimalizacja zbiera iloczyny, które różnią się jedną zmienną, i tę zmienną wykreśla. Po sklejeniu funkcja ma dawać dokładnie tę samą tablicę, tylko krótszym zapisem.
+
+W języku drabinkowym te trzy działania mają swoje styki~\cite{flaga,legierski}. Dwa styki normalnie otwarte w jednym szeregu to iloczyn: prąd dojdzie do cewki dopiero wtedy, gdy oba są jedynką. Dwie gałęzie spięte w jednym węźle to suma: wystarczy, że przewodzi jedna z nich. Styk zanegowany przewodzi przy zerze na wejściu, więc wstawia negację bez osobnej bramki.
+
+Instrukcja pokazuje ten sam chwyt na silniku, który ma ruszyć przy przycisku START, zezwoleniu i braku awarii: $M = S \cdot E \cdot \overline{F}$. Awaria stoi w szeregu jako styk zanegowany i zdejmuje cewkę, choć pozostałe warunki są spełnione. U nas tak samo wchodzi sygnał $C$ w zadaniu~2. W zadaniu~3 ten sam sygnał jest stykiem zwykłym, bo tam zasilanie musi być obecne, a nie nieobecne.
+
+Schemat z bramek rysowaliśmy już po minimalizacji, w tej postaci, którą potem widać na drabince. Bramka AND odpowiada szeregowi, OR węzłowi, NOT stykowi zanegowanemu.

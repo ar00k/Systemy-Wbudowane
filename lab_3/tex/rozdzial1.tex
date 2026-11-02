@@ -1,0 +1,24 @@
+\newpage
+\section{Cel ćwiczenia}
+
+Celem zajęć było złożenie układu kombinacyjnego od opisu słownego aż do programu w sterowniku. Dla trzech zadań przeszliśmy tę samą drogę: opis, wejścia i wyjścia, tablica prawdy, funkcja w postaci kanonicznej, minimalizacja, schemat z bramek i drabinka w LOGO! Soft Comfort. Testu na zaciskach w tym sprawozdaniu nie ma. Poprawność sprawdzaliśmy w symulatorze, na stanach, które rozdzielają gałęzie funkcji.
+
+Układ kombinacyjny liczy wyjście wyłącznie z tego, co w danym obiegu jest na wejściach. Nie wstawialiśmy markerów ani timerów, bo pamięć poprzedniego stanu zmieniłaby zadanie w układ sekwencyjny.
+
+Po ćwiczeniu potrafimy:
+
+\begin{itemize}
+    \item rozpisać wszystkie kombinacje wejść i odczytać z nich sumę iloczynów,
+    \item zwinąć tę sumę do postaci, która mieści się na kilku stykach,
+    \item narysować to samo bramkami AND, OR i NOT,
+    \item przenieść bramki na drabinkę: szereg jako iloczyn, gałąź równoległą jako sumę, styk zanegowany jako negację,
+    \item sprawdzić w symulacji, która gałąź faktycznie trzyma cewkę.
+\end{itemize}
+
+\section{Stanowisko}
+
+Program rysowaliśmy w LOGO! Soft Comfort jako schemat drabinkowy i odpalaliśmy go w symulacji wbudowanej w to samo środowisko. Sterownik LOGO! czyta wejścia, wykonuje program i wystawia wyjścia, a potem powtarza obieg. Przy funkcji kombinacyjnej jeden taki obieg wystarcza: cewka nie zależy od tego, co było na niej cykl wcześniej.
+
+Wejścia w LOGO! numerują się od I1, wyjścia od Q1. W instrukcji ćwiczenia te same sygnały są zapisane adresami typu I0.0, tak jak w sterownikach S7. Zostawiliśmy numerację z programu, bo tak podpisane są bloki na zrzutach.
+
+W symulacji przełącznik wejścia odsunięty w stronę zera jest niebieski, odsunięty w stronę jedynki jest czerwony. Żarówka przy Q1 świeci na żółto, gdy cewka jest załączona, i gaśnie, gdy cewka odpadła.

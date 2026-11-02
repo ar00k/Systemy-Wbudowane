@@ -1,0 +1,10 @@
+\newpage
+\section{Wnioski}
+
+Trzy funkcje zeszły na sterownik tą samą drogą. Tablica prawdy daje kanoniczną sumę, minimalizacja skraca ją do postaci z polecenia, a drabinka jest już rysunkiem tej postaci: szereg to iloczyn, węzeł to suma, kreska na styku to negacja. Po sklejeniu tablica się nie zmienia. Krótszy zapis ma tyle samo jedynek, tylko mniej styków.
+
+Warto trzymać wspólny czynnik za węzłem, a nie przepisywać go w każdej gałęzi. W zadaniu~2 jedno $\overline{C}$ odcina i $A$, i $B$. W zadaniu~3 jedno $C$ puszcza dalej zarówno parę progów, jak i start ręczny. Powtórzenie tego styku w obu gałęziach dałoby tę samą tablicę i dłuższy program.
+
+Ten sam symbol w zapisie algebraicznym nie mówi jeszcze, jakim stykiem wejdzie na drabinkę. W zadaniu~1 sygnał $C$ jest osobną gałęzią i sam załącza wyjście. W zadaniu~2 stoi w szeregu jako styk zanegowany i wyjście gasi. W zadaniu~3 też jest w szeregu, ale stykiem zwykłym, bo zasilanie ma być obecne. O tym, która wersja jest właściwa, decyduje tablica, a nie podobieństwo litery.
+
+Symulator wystarczył, żeby zobaczyć, która gałąź trzyma cewkę: sam iloczyn, sama suma, sama blokada. Żarówka przy Q1 zgadza się z wierszem tablicy dla ustawionej kombinacji. Nie zastępuje to podłączonego przycisku ani styku, który na obiekcie bywa odwrotnie spolaryzowany. Tę część instrukcja zostawia na test sprzętowy, a w tym sprawozdaniu jej nie ma.
