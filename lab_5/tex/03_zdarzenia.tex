@@ -1,0 +1,121 @@
+\section{Rozpoznawanie kliknięć}
+\label{sec:zdarzenia}
+
+\subsection{Pomiar czasu przytrzymania}
+Czas przytrzymania mierzą dwa timery z opóźnionym załączeniem (TON),
+pobudzane bezpośrednio sygnałem $I_1$:
+\begin{itemize}
+    \item $T_{001}$ -- ustawiony na \SI{0,5}{\second}; jego wyjście
+          przyjmuje wartość 1, gdy przycisk jest wciśnięty co najmniej
+          \SI{0,5}{\second},
+    \item $T_{002}$ -- ustawiony na \SI{2}{\second}; jego wyjście
+          przyjmuje wartość 1, gdy przycisk jest wciśnięty co najmniej
+          \SI{2}{\second}.
+\end{itemize}
+Ponieważ $T_{002}$ może być aktywny tylko wtedy, gdy aktywny jest też
+$T_{001}$, zachodzi $T_{002} \Rightarrow T_{001}$.
+
+\subsection{Dlaczego sama detekcja zbocza nie wystarcza}
+Rozstrzygnięcie, czy kliknięcie było krótkie, czy średnie, następuje
+w chwili puszczenia przycisku. Timery TON zerują się jednak w tym samym
+cyklu, w którym przycisk zostaje puszczony. W cyklu zbocza opadającego
+wyjścia $T_{001}$ i $T_{002}$ są więc już równe 0 i nie niosą
+informacji o czasie trwania naciśnięcia. W pierwszej, nieudanej wersji
+programu opartej na impulsie zbocza opadającego i bezpośrednim
+odczycie timerów:
+\begin{itemize}
+    \item kliknięcia krótkie i średnie nie były rozpoznawane,
+    \item kliknięcie długie, utrzymywane przez cały czas trzymania
+          przycisku, powodowało przełączanie telefonu w każdym cyklu
+          (w układzie ze sprzężeniem zwrotnym Set\,$\leftrightarrow$\,Reset),
+          czyli szybkie migotanie wyjścia $Q_2$.
+\end{itemize}
+
+\subsection{Pamięć poprzedniego cyklu}
+Rozwiązaniem jest zapamiętanie wartości sygnałów z \emph{poprzedniego}
+cyklu programu. Wykorzystano w tym celu markery $M_7$, $M_8$ i $M_9$,
+zapisywane w ostatniej sieci programu. Ponieważ sieć zapisująca marker
+jest wykonywana po wszystkich sieciach, które go odczytują,
+w sieciach 2--6 marker ma wartość z poprzedniego cyklu:
+\begin{equation}
+    M_7 := I_1,\qquad M_8 := T_{001},\qquad M_9 := T_{002}.
+    \label{eq:poprzedni}
+\end{equation}
+
+\subsection{Równania zdarzeń}
+Zdarzenia K, Ś i D wyznaczane są jako impulsy trwające jeden cykl:
+\begin{align}
+    M_4 \;(\mathrm{K}) &= M_7 \,\overline{I_1}\,\overline{M_8}, \label{eq:k}\\
+    M_5 \;(\mathrm{Ś}) &= M_7 \,\overline{I_1}\, M_8\,\overline{M_9}, \label{eq:s}\\
+    M_6 \;(\mathrm{D}) &= T_{002}\,\overline{M_9}. \label{eq:d}
+\end{align}
+Interpretacja poszczególnych czynników:
+\begin{itemize}
+    \item $M_7\,\overline{I_1}$ -- przycisk był wciśnięty w poprzednim
+          cyklu, a w bieżącym jest puszczony, czyli wystąpiło zbocze
+          opadające,
+    \item $\overline{M_8}$ -- w poprzednim cyklu próg \SI{0,5}{\second}
+          nie był przekroczony, więc kliknięcie było krótkie,
+    \item $M_8\,\overline{M_9}$ -- próg \SI{0,5}{\second} był
+          przekroczony, a próg \SI{2}{\second} nie, więc kliknięcie
+          było średnie,
+    \item $T_{002}\,\overline{M_9}$ -- zbocze narastające $T_{002}$:
+          próg \SI{2}{\second} został osiągnięty właśnie w bieżącym
+          cyklu, więc wystąpiło kliknięcie długie.
+\end{itemize}
+Po kliknięciu długim w cyklu puszczenia przycisku $M_8 = M_9 = 1$,
+więc ani $M_4$, ani $M_5$ nie przyjmują wartości 1. Spełnia to
+wymaganie R8.
+
+\subsection{Tabela prawdy dekodera zdarzeń}
+Tabela~\ref{tab:dekoder} przedstawia wartości zdarzeń dla wszystkich
+kombinacji $M_7$, $I_1$, $M_8$, $M_9$. Kombinacje z $M_9 = 1$
+i $M_8 = 0$ są niemożliwe ($T_{002} \Rightarrow T_{001}$), co
+oznaczono jako stan nieokreślony ($-$). Zdarzenie D zależy dodatkowo
+od $T_{002}$ i jest pokazane osobno.
+
+\begin{table}[H]
+\centering
+\caption{Tabela prawdy dekodera kliknięć K i Ś.}
+\label{tab:dekoder}
+\begin{tabular}{cccc|cc|l}
+\toprule
+$M_7$ & $I_1$ & $M_8$ & $M_9$ & $M_4$ & $M_5$ & Interpretacja \\
+\midrule
+0 & $\ast$ & $\ast$ & $\ast$ & 0 & 0 & przycisk nie był wciśnięty \\
+1 & 1 & $\ast$ & $\ast$ & 0 & 0 & przycisk nadal wciśnięty \\
+1 & 0 & 0 & 0 & \textbf{1} & 0 & puszczony przed \SI{0,5}{\second} -- K \\
+1 & 0 & 0 & 1 & $-$ & $-$ & kombinacja niemożliwa \\
+1 & 0 & 1 & 0 & 0 & \textbf{1} & puszczony między \SI{0,5}{\second} a \SI{2}{\second} -- Ś \\
+1 & 0 & 1 & 1 & 0 & 0 & puszczony po klik. długim -- brak zdarzenia \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Przykładowe przebiegi}
+Tabela~\ref{tab:przebieg} przedstawia przebieg kliknięcia średniego
+(\SI{1}{\second}) w kolejnych cyklach programu. Impuls $M_5$ trwa
+dokładnie jeden cykl.
+
+\begin{table}[H]
+\centering
+\caption{Przebieg sygnałów dla kliknięcia średniego (\SI{1}{\second}).}
+\label{tab:przebieg}
+\begin{tabular}{l|ccccc}
+\toprule
+Moment & $I_1$ & $T_{001}$ & $M_7$ & $M_8$ & $M_5$ \\
+\midrule
+pierwszy cykl po naciśnięciu    & 1 & 0 & 0 & 0 & 0 \\
+$t = \SI{0,3}{\second}$         & 1 & 0 & 1 & 0 & 0 \\
+$t = \SI{0,6}{\second}$ (próg)  & 1 & 1 & 1 & 0$\to$1 & 0 \\
+$t = \SI{0,9}{\second}$         & 1 & 1 & 1 & 1 & 0 \\
+pierwszy cykl po puszczeniu     & 0 & 0 & 1 & 1 & \textbf{1} \\
+następny cykl                   & 0 & 0 & 0 & 0 & 0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Dla kliknięcia krótkiego w cyklu puszczenia $M_7=1$ i $M_8=0$, więc
+impuls $M_4$ trwa jeden cykl. Dla kliknięcia długiego impuls $M_6$
+pojawia się jednokrotnie w cyklu, w którym $T_{002}$ zmienia się
+z 0 na 1, a puszczenie przycisku nie generuje zdarzenia.

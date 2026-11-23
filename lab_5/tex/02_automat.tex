@@ -1,0 +1,78 @@
+\section{Model automatu stanów}
+\label{sec:automat}
+
+\subsection{Stany i ich kodowanie}
+Układ opisano jako automat skończony. Stan kodują trzy zmienne
+pamięci: $M_1$ (telefon), $M_2$ (zapamiętany stan ekranu) i $M_3$
+(menu). Stan menu otwartego rozdzielono na dwa warianty, ponieważ po
+anulowaniu menu ekran musi wrócić do stanu sprzed jego otwarcia
+(wymaganie R4). Wymaga to zapamiętania, czy ekran był wcześniej
+włączony ($S_{3b}$), czy wygaszony ($S_{3a}$). Pięć stanów
+automatu przedstawiono w tabeli~\ref{tab:stany}.
+
+\begin{table}[H]
+\centering
+\caption{Stany automatu i ich kodowanie.}
+\label{tab:stany}
+\begin{tabular}{llccc|cc}
+\toprule
+Stan & Opis & $M_1$ & $M_2$ & $M_3$ & $Q_2$ & $Q_1$ \\
+\midrule
+$S_0$    & telefon wyłączony                    & 0 & 0 & 0 & 0 & 0 \\
+$S_1$    & praca, ekran wygaszony               & 1 & 0 & 0 & 1 & 0 \\
+$S_2$    & praca, ekran włączony                & 1 & 1 & 0 & 1 & 1 \\
+$S_{3a}$ & menu otwarte (wejście ze stanu $S_1$)& 1 & 0 & 1 & 1 & 1 \\
+$S_{3b}$ & menu otwarte (wejście ze stanu $S_2$)& 1 & 1 & 1 & 1 & 1 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Pozostałe trzy kombinacje $(M_1M_2M_3)$, to jest $010$, $001$ i $011$,
+odpowiadają telefonowi wyłączonemu z włączonym ekranem lub menu i są
+niedozwolone (wymaganie R7). W punkcie~\ref{sec:niedozwolone}
+pokazano, że program ich nie generuje.
+
+\subsection{Tabela przejść}
+Tabela~\ref{tab:przejscia} przedstawia stan następny w zależności
+od stanu bieżącego i zdarzenia (K, Ś, D).
+
+\begin{table}[H]
+\centering
+\caption{Tabela przejść automatu.}
+\label{tab:przejscia}
+\begin{tabular}{l|ccc}
+\toprule
+Stan bieżący & K & Ś & D \\
+\midrule
+$S_0$    & $S_0$    & $S_0$    & $S_2$ \\
+$S_1$    & $S_2$    & $S_{3a}$ & $S_0$ \\
+$S_2$    & $S_1$    & $S_{3b}$ & $S_0$ \\
+$S_{3a}$ & $S_1$    & $S_{3a}$ & $S_0$ \\
+$S_{3b}$ & $S_2$    & $S_{3b}$ & $S_0$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Graf przejść pokazano na rysunku~\ref{fig:automat}. Kliknięcie D
+z dowolnego stanu z włączonym telefonem prowadzi do $S_0$, dlatego na
+rysunku przedstawiono je jedną strzałką wychodzącą z ramki grupującej
+stany $S_1$, $S_2$, $S_{3a}$ i $S_{3b}$.
+
+\begin{figure}[H]
+\centering
+\input{figures/automat.tex}
+\caption{Graf przejść automatu obsługi przycisku zasilania.}
+\label{fig:automat}
+\end{figure}
+
+\subsection{Równania wyjść}
+Wyjścia układu wynikają bezpośrednio z kodowania stanów:
+\begin{align}
+    Q_2 &= M_1, \label{eq:q2}\\
+    Q_1 &= M_1\,(M_2 + M_3). \label{eq:q1}
+\end{align}
+Wyjście $Q_2$ odwzorowuje stan telefonu. Ekran świeci, gdy telefon
+działa i ekran jest zapamiętany jako włączony ($M_2$) albo menu jest
+otwarte ($M_3$) -- menu wymusza ekran niezależnie od $M_2$.
+Czynnik $M_1$ w równaniu~\eqref{eq:q1} gwarantuje spełnienie R7 także
+wtedy, gdyby pamięć znalazła się w stanie niedozwolonym.

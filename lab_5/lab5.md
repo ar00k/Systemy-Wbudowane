@@ -1,3 +1,5 @@
+// ORYGINALNY draft, możliwe że są braki
+
 Projekt układu sekwencyjnego obsługi przycisku zasilania telefonu
 1. Cel projektu
 

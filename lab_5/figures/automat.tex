@@ -1,0 +1,39 @@
+% Diagram automatu stanow -- TikZ
+\begin{tikzpicture}[
+    >=Stealth,
+    node distance=3.6cm,
+    st/.style={circle,draw,thick,minimum size=1.15cm,inner sep=1pt,font=\sffamily\small},
+    ev/.style={font=\small,fill=white,inner sep=1.5pt}
+]
+    \node[st] (S0)  at (0,0)    {$S_0$};
+    \node[st] (S1)  at (5,1.9)  {$S_1$};
+    \node[st] (S2)  at (5,-1.9) {$S_2$};
+    \node[st] (S3a) at (10.5,1.9)  {$S_{3a}$};
+    \node[st] (S3b) at (10.5,-1.9) {$S_{3b}$};
+
+    % telefon wylaczony
+    \path[->,thick]
+        (S0) edge[loop above] node[ev] {K, Ś} (S0)
+        (S0) edge[bend right=18] node[ev] {D} (S2);
+
+    % przelaczanie ekranu
+    \path[->,thick]
+        (S1) edge[bend right=18] node[ev] {K} (S2)
+        (S2) edge[bend right=18] node[ev] {K} (S1);
+
+    % otwarcie i anulowanie menu
+    \path[->,thick]
+        (S1)  edge[bend left=18]  node[ev] {Ś} (S3a)
+        (S3a) edge[bend left=18]  node[ev] {K} (S1)
+        (S2)  edge[bend right=18] node[ev] {Ś} (S3b)
+        (S3b) edge[bend right=18] node[ev] {K} (S2)
+        (S3a) edge[loop right] node[ev] {Ś} (S3a)
+        (S3b) edge[loop right] node[ev] {Ś} (S3b);
+
+    % D z kazdego stanu z wlaczonym telefonem
+    \node[draw,dashed,rounded corners,inner sep=0.45cm,
+          fit=(S1)(S2)(S3a)(S3b)] (grp) {};
+    \node[above=1pt of grp.north west,anchor=south west,font=\small\itshape]
+        {stany z włączonym telefonem};
+    \draw[->,thick] (grp.west |- S0) -- node[ev,pos=0.5] {D} (S0.east);
+\end{tikzpicture}

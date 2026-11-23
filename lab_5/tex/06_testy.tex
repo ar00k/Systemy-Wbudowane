@@ -1,0 +1,84 @@
+\section{Symulacja i testy}
+\label{sec:testy}
+
+\subsection{Metodyka}
+Działanie układu sprawdzono w symulatorze LOGO!Soft Comfort. Wejście
+$I_1$ skonfigurowano jako przycisk chwilowy, a czas przytrzymania
+mierzono stoperem. Przed pierwszym testem układ znajdował się w stanie
+$S_0$ (wszystkie przerzutniki z parametrem \texttt{Rem=off}).
+Scenariusze wykonywano jeden po drugim, a stan następny jednego testu
+był stanem początkowym kolejnego.
+
+\subsection{Scenariusze testowe}
+Tabela~\ref{tab:testy} zawiera sekwencję testów obejmującą wszystkie
+przejścia z tabeli~\ref{tab:przejscia}. Wynik każdego testu odczytano
+ze stanu wyjść $Q_1$ i $Q_2$ oraz markera $M_3$.
+
+\begin{table}[H]
+\centering
+\caption{Scenariusze testowe i oczekiwane wyniki.}
+\label{tab:testy}
+\begin{tabular}{rllcll|cc}
+\toprule
+Nr & Stan przed & Akcja & $t$ [s] & Stan po & & $Q_2$ & $Q_1$ \\
+\midrule
+ 1 & $S_0$    & K & 0,2 & $S_0$    & brak reakcji           & 0 & 0 \\
+ 2 & $S_0$    & Ś & 1   & $S_0$    & brak reakcji           & 0 & 0 \\
+ 3 & $S_0$    & D & 3   & $S_2$    & uruchomienie telefonu  & 1 & 1 \\
+ 4 & $S_2$    & K & 0,2 & $S_1$    & ekran wygaszony        & 1 & 0 \\
+ 5 & $S_1$    & K & 0,2 & $S_2$    & ekran włączony         & 1 & 1 \\
+ 6 & $S_2$    & Ś & 1   & $S_{3b}$ & otwarcie menu          & 1 & 1 \\
+ 7 & $S_{3b}$ & K & 0,2 & $S_2$    & anulowanie menu        & 1 & 1 \\
+ 8 & $S_2$    & K & 0,2 & $S_1$    & ekran wygaszony        & 1 & 0 \\
+ 9 & $S_1$    & Ś & 1   & $S_{3a}$ & menu wymusza ekran     & 1 & 1 \\
+10 & $S_{3a}$ & K & 0,2 & $S_1$    & ekran znów wygaszony   & 1 & 0 \\
+11 & $S_1$    & Ś & 1   & $S_{3a}$ & otwarcie menu          & 1 & 1 \\
+12 & $S_{3a}$ & Ś & 1   & $S_{3a}$ & menu pozostaje otwarte & 1 & 1 \\
+13 & $S_{3a}$ & D & 3   & $S_0$    & wyłączenie, menu zamknięte & 0 & 0 \\
+14 & $S_0$    & D & 3   & $S_2$    & uruchomienie, menu zamknięte & 1 & 1 \\
+15 & $S_2$    & Ś & 1   & $S_{3b}$ & otwarcie menu          & 1 & 1 \\
+16 & $S_{3b}$ & D & 3   & $S_0$    & wyłączenie telefonu    & 0 & 0 \\
+17 & $S_0$    & D & 3   & $S_2$    & uruchomienie telefonu  & 1 & 1 \\
+18 & $S_2$    & D & 3   & $S_0$    & wyłączenie telefonu    & 0 & 0 \\
+19 & $S_0$    & D & 3   & $S_2$    & uruchomienie telefonu  & 1 & 1 \\
+20 & $S_2$    & K & 0,2 & $S_1$    & ekran wygaszony        & 1 & 0 \\
+21 & $S_1$    & D & 3   & $S_0$    & wyłączenie telefonu    & 0 & 0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Test~3 sprawdza wymaganie R1 (uruchomienie włącza ekran), test~13
+sprawdza zamknięcie menu przy wyłączaniu telefonu, a test~14 -- że po
+ponownym uruchomieniu menu nie jest otwarte. Testy 1, 2 potwierdzają,
+że przy wyłączonym telefonie kliknięcia K i Ś nie wywołują reakcji.
+
+\subsection{Testy graniczne}
+Dodatkowo sprawdzono zachowanie układu w przypadkach granicznych
+(tab.~\ref{tab:graniczne}).
+
+\begin{table}[H]
+\centering
+\caption{Testy graniczne.}
+\label{tab:graniczne}
+\begin{tabular}{lll}
+\toprule
+Scenariusz & Oczekiwany wynik & Wymaganie \\
+\midrule
+trzymanie \SI{10}{\second} w stanie $S_2$ & jedno wyłączenie telefonu, bez migotania $Q_2$ & R8 \\
+trzymanie \SI{10}{\second} w stanie $S_0$ & jedno uruchomienie telefonu, bez migotania $Q_2$ & R8 \\
+puszczenie po \SI{0,49}{\second} (z $S_2$) & kliknięcie K -- ekran gaśnie ($S_1$) & R2 \\
+puszczenie po \SI{0,51}{\second} (z $S_2$) & kliknięcie Ś -- menu otwarte ($S_{3b}$) & R3 \\
+puszczenie po \SI{1,99}{\second} (z $S_2$) & kliknięcie Ś -- menu otwarte ($S_{3b}$) & R3 \\
+przytrzymanie \SI{2,01}{\second} (z $S_2$) & kliknięcie D -- telefon wyłączony ($S_0$) & R6 \\
+dwa szybkie kliknięcia K (z $S_2$) & ekran gaśnie i zapala się, stan $S_2$ & R2 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Wyniki}
+We wszystkich scenariuszach z tabel~\ref{tab:testy}
+i~\ref{tab:graniczne} wyjścia $Q_1$ i $Q_2$ były zgodne z oczekiwanymi
+wartościami. Stan $Q_1=1$ przy $Q_2=0$ nigdy nie wystąpił. Przy
+trzymaniu przycisku dłużej niż \SI{2}{\second} nie obserwowano już
+migotania wyjść, które występowało w pierwszej wersji programu
+(punkt~\ref{sec:zdarzenia}).

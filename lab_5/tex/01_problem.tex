@@ -1,0 +1,113 @@
+\section{Opis problemu}
+\label{sec:problem}
+
+\subsection{Cel ćwiczenia}
+Celem ćwiczenia jest zaprojektowanie i uruchomienie w programie
+LOGO!Soft Comfort układu sekwencyjnego w języku drabinkowym (LAD),
+który za pomocą \emph{jednego} przycisku zasilania steruje stanem
+telefonu oraz jego ekranu. O wykonywanej akcji decyduje czas
+przytrzymania przycisku i bieżący stan urządzenia, a więc układ musi
+posiadać pamięć -- jest to układ sekwencyjny, a nie kombinacyjny.
+
+\subsection{Rodzaje kliknięć}
+Zdarzenia generowane przez przycisk zostały podzielone na trzy klasy
+zależnie od czasu $t$ przytrzymania (tab.~\ref{tab:klikniecia}).
+
+\begin{table}[H]
+\centering
+\caption{Klasyfikacja kliknięć przycisku zasilania.}
+\label{tab:klikniecia}
+\begin{tabular}{llcl}
+\toprule
+Rodzaj & Oznaczenie & Czas przytrzymania & Moment rozpoznania \\
+\midrule
+krótkie & K & $t < \SI{0,5}{\second}$ & w chwili puszczenia przycisku \\
+średnie & Ś & $\SI{0,5}{\second} \le t < \SI{2}{\second}$ & w chwili puszczenia przycisku \\
+długie  & D & $t \ge \SI{2}{\second}$ & po upływie \SI{2}{\second}, jeszcze podczas trzymania \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Kliknięcie długie jest rozpoznawane bez czekania na puszczenie
+przycisku, podobnie jak w rzeczywistych telefonach. Puszczenie
+przycisku po kliknięciu długim nie generuje już żadnego zdarzenia.
+
+\subsection{Wymagania funkcjonalne}
+\begin{enumerate}
+    \item[R1.] Gdy telefon jest wyłączony, kliknięcia K i Ś nie powodują
+          żadnej reakcji. Kliknięcie D uruchamia telefon i włącza ekran.
+    \item[R2.] Gdy telefon jest włączony, kliknięcie K przełącza stan
+          ekranu (włączony/wygaszony).
+    \item[R3.] Gdy telefon jest włączony, kliknięcie Ś otwiera menu
+          wyłączenia. Otwarte menu zawsze wymusza włączony ekran.
+    \item[R4.] Gdy menu jest otwarte, kliknięcie K anuluje menu
+          i przywraca stan ekranu sprzed jego otwarcia.
+    \item[R5.] Gdy menu jest otwarte, kliknięcie Ś pozostawia menu
+          otwarte.
+    \item[R6.] Kliknięcie D w dowolnym stanie z włączonym telefonem
+          wyłącza telefon, zamyka menu i gasi ekran.
+    \item[R7.] Ekran nigdy nie świeci przy wyłączonym telefonie.
+    \item[R8.] Jedno naciśnięcie przycisku wywołuje dokładnie jedno
+          zdarzenie (K, Ś albo D). Dłuższe trzymanie przycisku nie
+          powoduje powtórnych przełączeń.
+\end{enumerate}
+
+\subsection{Wielkości wejściowe i wyjściowe}
+\begin{table}[H]
+\centering
+\caption{Wejścia i wyjścia układu.}
+\label{tab:io}
+\begin{tabular}{clll}
+\toprule
+Symbol & Typ & Znaczenie & Wartość 1 \\
+\midrule
+$I_1$ & wejście & przycisk zasilania (chwilowy) & przycisk wciśnięty \\
+$Q_1$ & wyjście & stan ekranu & ekran włączony \\
+$Q_2$ & wyjście & stan telefonu & telefon działa \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Zmienne pamięci wewnętrznej}
+Do zapamiętania stanu automatu oraz do rozpoznawania zdarzeń użyto
+markerów i bloków funkcyjnych (tab.~\ref{tab:pamiec}).
+
+\begin{table}[H]
+\centering
+\caption{Zmienne pamięci wewnętrznej.}
+\label{tab:pamiec}
+\begin{tabular}{cll}
+\toprule
+Symbol & Znaczenie & Rola \\
+\midrule
+$M_1$ & stan telefonu & zmienna stanu \\
+$M_2$ & zapamiętany stan ekranu & zmienna stanu \\
+$M_3$ & menu wyłączenia otwarte & zmienna stanu \\
+$M_4$ & zdarzenie K (krótkie kliknięcie) & impuls jednocyklowy \\
+$M_5$ & zdarzenie Ś (średnie kliknięcie) & impuls jednocyklowy \\
+$M_6$ & zdarzenie D (długie kliknięcie) & impuls jednocyklowy \\
+$M_7$ & $I_1$ z poprzedniego cyklu & pamięć cyklu \\
+$M_8$\footnotemark & $T_{001}$ z poprzedniego cyklu & pamięć cyklu \\
+$M_9$ & $T_{002}$ z poprzedniego cyklu & pamięć cyklu \\
+$T_{001}$ & timer TON \SI{0,5}{\second} & pomiar czasu \\
+$T_{002}$ & timer TON \SI{2}{\second} & pomiar czasu \\
+\bottomrule
+\end{tabular}
+\end{table}
+\footnotetext{Na zrzutach ekranu z programu LOGO! marker ten występuje
+pod oznaczeniem $M_{80}$. Pełni on rolę $M_8$ opisaną w dokumencie.}
+
+\subsection{Założenia projektowe}
+\begin{itemize}
+    \item Program wykonywany jest cyklicznie przez sterownik. Przy
+          przytrzymanym przycisku sygnał $I_1$ pozostaje w stanie
+          wysokim przez wiele cykli, dlatego każde zdarzenie musi być
+          sprowadzone do impulsu trwającego \emph{dokładnie jeden
+          cykl}.
+    \item Wszystkie przerzutniki RS są bezpamięciowe po restarcie
+          programu (\texttt{Rem=off}), więc układ zawsze startuje
+          w stanie $S_0$ (telefon wyłączony).
+    \item Przy każdym przerzutniku warunki Set i Reset zostały
+          dobrane tak, aby nigdy nie były aktywne jednocześnie.
+          Poprawność nie zależy zatem od priorytetu wejść bloku RS.
+\end{itemize}

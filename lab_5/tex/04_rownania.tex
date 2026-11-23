@@ -1,0 +1,114 @@
+\section{Równania sterowania}
+\label{sec:rownania}
+
+\subsection{Zasada budowy}
+Każda ze zmiennych stanu $M_1$, $M_2$, $M_3$ jest przechowywana
+w przerzutniku RS. Dla przerzutnika o wejściach $S_x$ (Set) i $R_x$
+(Reset) obowiązuje
+\begin{equation}
+    M_x^{\text{next}} = \bigl(S_x + M_x\bigr)\,\overline{R_x}.
+    \label{eq:rs}
+\end{equation}
+Warunki $S_x$ i $R_x$ wyprowadzono z tabeli przejść
+(tab.~\ref{tab:przejscia}). Dobrano je tak, aby były rozłączne, tzn.
+$S_x R_x \equiv 0$.
+
+\subsection{Telefon ($M_1$)}
+Telefon zmienia stan wyłącznie po kliknięciu D. Jeżeli był wyłączony,
+zostaje włączony, w przeciwnym razie wyłączony:
+\begin{align}
+    S_1 &= M_6\,\overline{M_1}, \label{eq:s1}\\
+    R_1 &= M_6\,M_1. \label{eq:r1}
+\end{align}
+Ponieważ $M_6$ trwa jeden cykl, a warunki $S_1$ i $R_1$ zależą od
+$M_1$ w przeciwny sposób, zmiana stanu następuje dokładnie raz na
+kliknięcie. Przy impulsie dłuższym niż jeden cykl układ w sposób
+ciągły przełączałby $M_1$.
+
+\subsection{Ekran ($M_2$)}
+\begin{align}
+    S_2 &= M_4\,M_1\,\overline{M_3}\,\overline{M_2} \;+\; M_6\,\overline{M_1}, \label{eq:s2}\\
+    R_2 &= M_4\,M_1\,\overline{M_3}\,M_2 \;+\; M_6\,M_1. \label{eq:r2}
+\end{align}
+Pierwsze składniki realizują przełączanie ekranu kliknięciem K
+(wymaganie R2): gdy $M_2=0$ aktywne jest Set, gdy $M_2=1$ -- Reset.
+Czynnik $\overline{M_3}$ powoduje, że przy otwartym menu kliknięcie K
+nie zmienia $M_2$, a więc po anulowaniu menu ekran wraca do
+poprzedniego stanu (R4). Składnik $M_6\,\overline{M_1}$ włącza ekran
+przy uruchamianiu telefonu ($S_0 \to S_2$), a $M_6\,M_1$ zeruje go
+przy wyłączaniu.
+
+\subsection{Menu ($M_3$)}
+\begin{align}
+    S_3 &= M_5\,M_1, \label{eq:s3}\\
+    R_3 &= M_4\,M_3 \;+\; M_6. \label{eq:r3}
+\end{align}
+Kliknięcie Ś otwiera menu tylko przy włączonym telefonie
+(R1, R3). Menu zamykane jest przez K (anulowanie, R4) lub przez D
+(wyłączenie telefonu, R6). Brak składnika $M_6$ w $R_3$ skutkowałby
+pozostaniem menu otwartego po wyłączeniu telefonu.
+
+\subsection{Uproszczenie i wybór postaci równań}
+W równaniu~\eqref{eq:s2} czynnik $\overline{M_2}$ w pierwszym
+składniku można by pominąć, jeśli przyjąć, że w bloku RS wejście
+Reset ma priorytet nad Set. Wtedy przy $M_2=1$ aktywne byłyby oba
+wejścia, a o stanie decydowałaby zasada ,,Reset wygrywa''. Nie
+zastosowano tego uproszczenia,
+ponieważ postać z jawnymi czynnikami zapewnia rozłączność $S_2$
+i $R_2$, a poprawność układu nie zależy wówczas od priorytetu wejść
+bloku RS. Z tego samego powodu pozostałe pary $S_x$, $R_x$ są
+rozłączne: $S_1 R_1 = 0$ (czynniki $\overline{M_1}$ i $M_1$),
+a zdarzenia $M_4$, $M_5$, $M_6$ nigdy nie występują jednocześnie.
+
+Równanie~\eqref{eq:q1} można by uprościć do $Q_1 = M_2 + M_3$, gdyż
+w punkcie~\ref{sec:niedozwolone} pokazano, że $M_1 = 0$ implikuje
+$M_2 = M_3 = 0$. Czynnik $M_1$ został jednak zachowany jako
+zabezpieczenie (por. R7).
+
+\subsection{Weryfikacja równań względem tabeli przejść}
+Tabela~\ref{tab:weryfikacja} zawiera wynik podstawienia kodów
+stanów i zdarzeń do równań~\eqref{eq:s1}--\eqref{eq:r3}. W każdym
+wierszu stan następny wynikający z równań jest zgodny z tabelą
+przejść~\ref{tab:przejscia}.
+
+\begin{table}[H]
+\centering
+\caption{Weryfikacja równań sterowania dla wszystkich stanów i zdarzeń.}
+\label{tab:weryfikacja}
+\begin{tabular}{lll|c|l}
+\toprule
+Stan & Zdarzenie & Aktywne wejścia RS & $M_1M_2M_3$ & Stan następny \\
+\midrule
+$S_0$    & K, Ś & --- & 000 & $S_0$ \\
+$S_0$    & D & $S_1$, $S_2$, $R_3$ & 110 & $S_2$ \\
+$S_1$    & K & $S_2$ & 110 & $S_2$ \\
+$S_1$    & Ś & $S_3$ & 101 & $S_{3a}$ \\
+$S_1$    & D & $R_1$, $R_2$, $R_3$ & 000 & $S_0$ \\
+$S_2$    & K & $R_2$ & 100 & $S_1$ \\
+$S_2$    & Ś & $S_3$ & 111 & $S_{3b}$ \\
+$S_2$    & D & $R_1$, $R_2$, $R_3$ & 000 & $S_0$ \\
+$S_{3a}$ & K & $R_3$ & 100 & $S_1$ \\
+$S_{3a}$ & Ś & $S_3$ & 101 & $S_{3a}$ \\
+$S_{3a}$ & D & $R_1$, $R_2$, $R_3$ & 000 & $S_0$ \\
+$S_{3b}$ & K & $R_3$ & 110 & $S_2$ \\
+$S_{3b}$ & Ś & $S_3$ & 111 & $S_{3b}$ \\
+$S_{3b}$ & D & $R_1$, $R_2$, $R_3$ & 000 & $S_0$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Brak stanów niedozwolonych}
+\label{sec:niedozwolone}
+Wymaganie R7 wymaga wykluczenia stanów, w których $M_1=0$ przy
+$M_2=1$ lub $M_3=1$. Wynika to z równań:
+\begin{itemize}
+    \item $M_1$ zmienia się wyłącznie w chwili $M_6=1$, a wtedy
+          zachodzi: przy wyłączaniu ($M_6 M_1$) wejścia $R_2$ i $R_3$
+          zerują $M_2$ i $M_3$, przy włączaniu ($M_6 \overline{M_1}$)
+          $M_2$ zostaje ustawione, a $M_3$ zerowane przez $R_3$,
+    \item $M_3$ może zostać ustawione tylko przy $M_1=1$ (równanie~\eqref{eq:s3}),
+    \item $M_2$ może zostać ustawione tylko przy $M_1=1$ (przełączanie K)
+          albo w chwili włączania telefonu.
+\end{itemize}
+Po wyłączeniu telefonu zawsze $M_2 = M_3 = 0$. Układ nie opuszcza więc
+zbioru pięciu dozwolonych stanów z tabeli~\ref{tab:stany}.

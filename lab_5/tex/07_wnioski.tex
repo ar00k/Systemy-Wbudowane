@@ -1,0 +1,38 @@
+\section{Wnioski}
+\label{sec:wnioski}
+
+Zaprojektowano i uruchomiono w programie LOGO!Soft Comfort
+sekwencyjny układ drabinkowy obsługujący przycisk zasilania telefonu.
+Jeden przycisk steruje dwoma wyjściami, a rodzaj akcji zależy od czasu
+przytrzymania oraz od bieżącego stanu urządzenia.
+
+\begin{enumerate}
+    \item Poprawny opis układu wymaga pięciu stanów. Stan menu
+          otwartego trzeba rozdzielić na dwa warianty, aby po
+          anulowaniu menu przywrócić poprzedni stan ekranu.
+    \item Najistotniejszym problemem praktycznym okazała się
+          cykliczna praca sterownika. Przy przytrzymanym przycisku
+          sygnał pozostaje wysoki przez wiele cykli, a timery TON
+          zerują się w tym samym cyklu, w którym przycisk jest
+          puszczany. Pierwotne rozwiązanie oparte na impulsie zbocza
+          opadającego nie rozpoznawało kliknięć krótkich i średnich,
+          a kliknięcie długie powodowało migotanie wyjścia.
+    \item Problem rozwiązano przez zapamiętanie sygnałów $I_1$,
+          $T_{001}$, $T_{002}$ z poprzedniego cyklu w markerach
+          $M_7$--$M_9$ i wyznaczenie zdarzeń K, Ś i D jako impulsów
+          jednocyklowych. Dzięki temu każde naciśnięcie przycisku
+          daje dokładnie jedno zdarzenie, niezależnie od czasu
+          trzymania.
+    \item Warunki Set i Reset wszystkich przerzutników RS są
+          rozłączne, więc poprawność układu nie zależy od priorytetu
+          wejść bloku RS. Weryfikacja równań względem tabeli
+          przejść (tab.~\ref{tab:weryfikacja}) potwierdziła zgodność
+          dla wszystkich stanów i zdarzeń.
+    \item Warunek $M_1$ w równaniu wyjścia $Q_1$ oraz zerowanie
+          $M_2$ i $M_3$ przy wyłączaniu telefonu gwarantują, że
+          ekran nie świeci przy wyłączonym telefonie.
+    \item Ograniczeniami rozwiązania są stałe progi czasowe
+          (\SI{0,5}{\second} i \SI{2}{\second}) oraz zależność od
+          kolejności sieci w programie -- zmiana kolejności, zwłaszcza
+          sieci~7, naruszyłaby jednocyklowy charakter zdarzeń.
+\end{enumerate}
